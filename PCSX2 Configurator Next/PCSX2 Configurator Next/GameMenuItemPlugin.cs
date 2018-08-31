@@ -18,7 +18,7 @@ namespace PCSX2_Configurator_Next
 
         public bool GetIsValidForGame(IGame selectedGame)
         {
-            return false;
+            return selectedGame.Platform == "Sony Playstation 2";
         }
 
         public bool GetIsValidForGames(IGame[] selectedGames)
