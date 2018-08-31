@@ -4,7 +4,7 @@ using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next
 {
-    public class GameMenuItemPlugin : IGameMenuItemPlugin
+    internal class GameMenuItemPlugin : IGameMenuItemPlugin
     {
         public bool SupportsMultipleGames => false;
 

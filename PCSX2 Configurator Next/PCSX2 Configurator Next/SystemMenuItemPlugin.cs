@@ -3,7 +3,7 @@ using Unbroken.LaunchBox.Plugins;
 
 namespace PCSX2_Configurator_Next
 {
-    public class SystemMenuItemPlugin : ISystemMenuItemPlugin
+    internal class SystemMenuItemPlugin : ISystemMenuItemPlugin
     {
         public string Caption => "PCSX2 Configurator";
 

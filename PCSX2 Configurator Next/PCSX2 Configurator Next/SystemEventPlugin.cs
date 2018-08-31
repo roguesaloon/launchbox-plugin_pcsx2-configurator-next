@@ -4,7 +4,7 @@ using Unbroken.LaunchBox.Plugins;
 
 namespace PCSX2_Configurator_Next
 {
-    public class SystemEventsPlugin : ISystemEventsPlugin
+    internal class SystemEventsPlugin : ISystemEventsPlugin
     {
         public void OnEventRaised(string eventType)
         {
