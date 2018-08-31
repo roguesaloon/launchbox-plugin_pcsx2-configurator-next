@@ -1,0 +1,1 @@
+# launchbox-plugin_pcsx2-configurator-next
