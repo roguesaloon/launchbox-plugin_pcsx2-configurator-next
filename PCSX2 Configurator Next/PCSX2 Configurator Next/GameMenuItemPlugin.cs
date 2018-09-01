@@ -28,7 +28,7 @@ namespace PCSX2_Configurator_Next
 
         public void OnSelected(IGame selectedGame)
         {
-            var configWindow = new ConfigWindow();
+            var configWindow = new ConfigWindow(selectedGame);
             configWindow.Show();
         }
 
