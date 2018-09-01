@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next
 {
-    /// <inheritdoc cref="System.Windows.Window" />
+    /// <inheritdoc cref="Window" />
     /// <summary>
     /// Interaction logic for ConfigWindow.xaml
     /// </summary>
@@ -35,10 +36,28 @@ namespace PCSX2_Configurator_Next
             if (!Configurator.IsGameConfigured(_selectedGame))
             {
                 Pcsx2Btn.Cursor = null;
+                Pcsx2Btn.IsEnabled = false;
                 Pcsx2Btn.Foreground = Brushes.DarkGray;
             }
 
-            Console.WriteLine("PCSX2 Configurator Config Window Initialized");
+            CreateConfigBtn.MouseDown += CreateConfigBtn_Click;
+            DownloadConfigBtn.MouseDown += DownloadConfigBtn_Click;
+            Pcsx2Btn.MouseDown += Pcsx2Btn_Click;
+        }
+
+        private static void CreateConfigBtn_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
