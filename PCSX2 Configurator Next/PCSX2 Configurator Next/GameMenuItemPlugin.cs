@@ -7,6 +7,7 @@ namespace PCSX2_Configurator_Next
 {
     internal class GameMenuItemPlugin : IGameMenuItemPlugin
     {
+
         public bool SupportsMultipleGames => false;
 
         public string Caption => "PCSX2 Configurator";
@@ -34,6 +35,8 @@ namespace PCSX2_Configurator_Next
                 Owner = Application.Current.MainWindow,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
+            configWindow.Closing += (sender, args) => configWindow.Owner.IsEnabled = true;
+            configWindow.Owner.IsEnabled = false;
             configWindow.Show();
         }
 

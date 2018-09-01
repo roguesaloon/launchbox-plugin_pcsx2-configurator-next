@@ -1,11 +1,16 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
 using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next
 {
     public class Configurator
     {
+        public static string PluginDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static string LaunchBoxDircetory => Application.StartupPath;
+
         public static string GetSafeGameName(string gameName)
         {
             var safeName = Path.GetInvalidFileNameChars().Aggregate(gameName, (s, c) => s.Replace(c.ToString(), ""));
