@@ -45,17 +45,19 @@ namespace PCSX2_Configurator_Next
             Pcsx2Btn.MouseDown += Pcsx2Btn_Click;
         }
 
-        private static void CreateConfigBtn_Click(object sender, RoutedEventArgs e)
+        private void CreateConfigBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Show Message about overwriting if already configured
+            Configurator.CreateConfig(_selectedGame);
+            InitializeConfigWindow();
+        }
+
+        private void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private static void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
+        private void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
