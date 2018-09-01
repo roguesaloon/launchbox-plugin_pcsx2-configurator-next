@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Windows;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
@@ -28,7 +29,11 @@ namespace PCSX2_Configurator_Next
 
         public void OnSelected(IGame selectedGame)
         {
-            var configWindow = new ConfigWindow(selectedGame);
+            var configWindow = new ConfigWindow(selectedGame)
+            {
+                Owner = Application.Current.MainWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
             configWindow.Show();
         }
 
