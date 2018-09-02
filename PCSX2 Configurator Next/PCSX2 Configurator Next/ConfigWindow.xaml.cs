@@ -31,10 +31,10 @@ namespace PCSX2_Configurator_Next
                 ? ConfiguredLbl.Content.ToString().Replace("[Configured]", "Configured")
                 : ConfiguredLbl.Content.ToString().Replace("[Configured]", "Not Configured");
 
-            if (Configurator.IsGameUsingRemoteConfig(_selectedGame))
-            {
-                DownloadConfigBtn.Content = DownloadConfigBtn.Content.ToString().Replace("Download", "Update");
-            }
+            DownloadConfigBtn.Content = "[Download] Config";
+            DownloadConfigBtn.Content = Configurator.IsGameUsingRemoteConfig(_selectedGame)
+                ? DownloadConfigBtn.Content.ToString().Replace("[Download]", "Update")
+                : DownloadConfigBtn.Content.ToString().Replace("[Download]", "Download");
 
             if (!Configurator.IsGameConfigured(_selectedGame))
             {
