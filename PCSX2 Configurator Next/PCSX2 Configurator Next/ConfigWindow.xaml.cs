@@ -113,7 +113,7 @@ namespace PCSX2_Configurator_Next
             Configurator.RemoveConfig(_selectedGame);
             InitializeConfigWindow();
 
-            MessageBox.Show("Config Removed Successfully", Title);
+            MessageBox.Show("Config Successfully Removed", Title);
         }
 
         private void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
