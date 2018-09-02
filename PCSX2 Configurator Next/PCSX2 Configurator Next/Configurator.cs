@@ -84,11 +84,27 @@ namespace PCSX2_Configurator_Next
             return File.Exists(remoteFile);
         }
 
+        public static void DeleteConfigDir(IGame game)
+        {
+            var gameConfigDir = GetGameConfigDir(game);
+            if (Directory.Exists(gameConfigDir))
+            {
+                Directory.Delete(gameConfigDir, true);
+            }
+        }
+
+        public static void RemoveConfig(IGame game)
+        {
+            DeleteConfigDir(game);
+
+            // TODO: Clear Command Line and Config Path
+        }
+
         public static void CreateConfig(IGame game)
         {
             var gameConfigDir = GetGameConfigDir(game);
 
-            if (Directory.Exists(gameConfigDir)) Directory.Delete(gameConfigDir, true);
+            DeleteConfigDir(game);
             Directory.CreateDirectory(gameConfigDir);
 
             CreateUiConfigFile(gameConfigDir, game);

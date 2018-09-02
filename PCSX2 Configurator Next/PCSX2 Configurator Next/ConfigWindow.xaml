@@ -7,9 +7,10 @@
         MinWidth="550" MinHeight="360" Width="550" Height="360"
         Title="PCSX2 Configurator">
     <Grid>
-        <Label x:Name="ConfiguredLbl" Content="[Game Name]: Not Configured" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="160,10,156,0" HorizontalContentAlignment="Center" FontSize="16"/>
+        <Label x:Name="ConfiguredLbl" Content="[Game Name]: [Configured]" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="160,10,156,0" HorizontalContentAlignment="Center" FontSize="16"/>
         <Label x:Name="CreateConfigBtn" Content="Create Config" HorizontalAlignment="Center" Margin="160,90,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand"/>
         <Label x:Name="DownloadConfigBtn" Content="Download Config" HorizontalAlignment="Center" Margin="160,130,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand"/>
-        <Label x:Name="Pcsx2Btn" Content="Configure with PCSX2" HorizontalAlignment="Center" Margin="160,170,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand"/>
+        <Label x:Name="RemoveConfigBtn" Content="Remove Config" HorizontalAlignment="Center" Margin="160,170,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand"/>
+        <Label x:Name="Pcsx2Btn" Content="Configure with PCSX2" HorizontalAlignment="Center" Margin="160,210,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand"/>
     </Grid>
 </Window>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Unbroken.LaunchBox.Plugins.Data;
 
@@ -18,15 +20,16 @@ namespace PCSX2_Configurator_Next
             _selectedGame = selectedGame;
             InitializeComponent();
             InitializeConfigWindow();
+            SetupEvents();
         }
 
         private void InitializeConfigWindow()
         {
+            ConfiguredLbl.Content = "[Game Name]: [Configured]";
             ConfiguredLbl.Content = ConfiguredLbl.Content.ToString().Replace("[Game Name]", _selectedGame.Title);
-            if (Configurator.IsGameConfigured(_selectedGame))
-            {
-                ConfiguredLbl.Content = ConfiguredLbl.Content.ToString().Replace("Not ", string.Empty);
-            }
+            ConfiguredLbl.Content = Configurator.IsGameConfigured(_selectedGame)
+                ? ConfiguredLbl.Content.ToString().Replace("[Configured]", "Configured")
+                : ConfiguredLbl.Content.ToString().Replace("[Configured]", "Not Configured");
 
             if (Configurator.IsGameUsingRemoteConfig(_selectedGame))
             {
@@ -35,26 +38,82 @@ namespace PCSX2_Configurator_Next
 
             if (!Configurator.IsGameConfigured(_selectedGame))
             {
-                Pcsx2Btn.Cursor = null;
-                Pcsx2Btn.IsEnabled = false;
-                Pcsx2Btn.Foreground = Brushes.DarkGray;
+                DisableControl(RemoveConfigBtn);
+                DisableControl(Pcsx2Btn);
             }
+            else
+            {
+                EnableControl(RemoveConfigBtn);
+                EnableControl(Pcsx2Btn);
+            }
+        }
 
+        private static void DisableControl(Control control)
+        {
+            control.Cursor = null;
+            control.IsEnabled = false;
+            control.Foreground = Brushes.DarkGray;
+        }
+
+        private static void EnableControl(FrameworkElement control)
+        {
+            control.Cursor = Cursors.Hand;
+            control.IsEnabled = true;
+            control.ClearValue(ForegroundProperty);
+        }
+
+        private void SetupEvents()
+        {
             CreateConfigBtn.MouseDown += CreateConfigBtn_Click;
             DownloadConfigBtn.MouseDown += DownloadConfigBtn_Click;
+            RemoveConfigBtn.MouseDown += RemoveConfigBtn_Click;
             Pcsx2Btn.MouseDown += Pcsx2Btn_Click;
         }
 
         private void CreateConfigBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Show Message about overwriting if already configured
+            var createConfig = true;
+            if (Configurator.IsGameConfigured(_selectedGame))
+            {
+                var message =
+                    "This game is already configured\nThis will overwrite your previous configuration\nDo you still wish to continue?";
+                var msgBox = MessageBox.Show(message, Title, MessageBoxButton.YesNo);
+
+                if (msgBox == MessageBoxResult.No)
+                {
+                    createConfig = false;
+                }
+            }
+
+            if (!createConfig) return;
             Configurator.CreateConfig(_selectedGame);
             InitializeConfigWindow();
+
+            MessageBox.Show("Game Successfully Configured", Title);
         }
 
         private void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        private void RemoveConfigBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var removeConfig = true;
+
+            var message = "This will remove the current config for this game\nDo you still wish to to continue?";
+            var msgBox = MessageBox.Show(message, Title, MessageBoxButton.YesNo);
+
+            if (msgBox == MessageBoxResult.No)
+            {
+                removeConfig = false;
+            }
+
+            if (!removeConfig) return;
+            Configurator.RemoveConfig(_selectedGame);
+            InitializeConfigWindow();
+
+            MessageBox.Show("Config Removed Successfully", Title);
         }
 
         private void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
