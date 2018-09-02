@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using Unbroken.LaunchBox.Plugins;
 
 namespace PCSX2_Configurator_Next
@@ -17,7 +18,7 @@ namespace PCSX2_Configurator_Next
 
         public void OnSelected()
         {
-
+            throw new NotImplementedException();
         }
     }
 }

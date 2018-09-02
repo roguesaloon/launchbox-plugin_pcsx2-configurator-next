@@ -109,6 +109,8 @@ namespace PCSX2_Configurator_Next
 
             CreateUiConfigFile(gameConfigDir, game);
             CopyOtherSettings(gameConfigDir);
+
+            // TODO: Set Command Line and Config Path
         }
 
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
