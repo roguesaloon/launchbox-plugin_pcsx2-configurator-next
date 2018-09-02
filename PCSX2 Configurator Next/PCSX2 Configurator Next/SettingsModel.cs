@@ -18,6 +18,10 @@ namespace PCSX2_Configurator_Next
             CopyWindowSettings = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyWindowSettings"]);
             UseIndependantMemCards = bool.Parse(settingsFile["PCSX2_Configurator"]["UseIndependantMemCards"]);
             ExposeAllConfigSettings = bool.Parse(settingsFile["PCSX2_Configurator"]["ExposeAllConfigSettings"]);
+            CopyVmSettingsFile = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyVmSettingsFile"]);
+            CopyGsdxSettingsFile = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyGsdxSettingsFile"]);
+            CopySpu2XSettingsFile = bool.Parse(settingsFile["PCSX2_Configurator"]["CopySpu2XSettingsFile"]);
+            CopyLilyPadSettingsFile = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyLilyPadSettingsFile"]);
         }
 
         public static string GameConfigsDir { get; }
@@ -27,5 +31,9 @@ namespace PCSX2_Configurator_Next
         public static bool CopyWindowSettings { get; }
         public static bool UseIndependantMemCards { get; }
         public static bool ExposeAllConfigSettings { get; }
+        public static bool CopyVmSettingsFile { get; }
+        public static bool CopyGsdxSettingsFile { get; }
+        public static bool CopySpu2XSettingsFile { get; }
+        public static bool CopyLilyPadSettingsFile { get; }
     }
 }

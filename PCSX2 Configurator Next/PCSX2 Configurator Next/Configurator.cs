@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using IniParser;
@@ -91,6 +92,7 @@ namespace PCSX2_Configurator_Next
             Directory.CreateDirectory(gameConfigDir);
 
             CreateUiConfigFile(gameConfigDir, game);
+            CopyOtherSettings(gameConfigDir);
         }
 
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
@@ -136,6 +138,36 @@ namespace PCSX2_Configurator_Next
             targetUiConfig.Global["AskOnBoot"] = "disabled";
 
             iniParser.WriteFile(targetConfigDir + "\\" + uiConfigFileName, targetUiConfig);
+        }
+
+        [SuppressMessage("ReSharper", "InvertIf")]
+        private static void CopyOtherSettings(string targetConfigDir)
+        {
+            var baseConfigDir = GetBaseConfigDir();
+
+            if (SettingsModel.CopyVmSettingsFile)
+            {
+                var vmSettingsFileName = "PCSX2_vm.ini";
+                File.Copy($"{baseConfigDir}\\{vmSettingsFileName}", $"{targetConfigDir}\\{vmSettingsFileName}", true);
+            }
+
+            if (SettingsModel.CopyGsdxSettingsFile)
+            {
+                var gsdxSettingsFileName = "GSdx.ini";
+                File.Copy($"{baseConfigDir}\\{gsdxSettingsFileName}", $"{targetConfigDir}\\{gsdxSettingsFileName}", true);
+            }
+
+            if (SettingsModel.CopySpu2XSettingsFile)
+            {
+                var spu2XSetiingsFileName = "SPU2-X.ini";
+                File.Copy($"{baseConfigDir}\\{spu2XSetiingsFileName}", $"{targetConfigDir}\\{spu2XSetiingsFileName}", true);
+            }
+
+            if (SettingsModel.CopyLilyPadSettingsFile)
+            {
+                var lilyPadSettingsFileName = "LilyPad.ini";
+                File.Copy($"{baseConfigDir}\\{lilyPadSettingsFileName}", $"{targetConfigDir}\\{lilyPadSettingsFileName}", true);
+            }
         }
     }
 }
