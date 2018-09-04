@@ -1,7 +1,10 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Reflection;
 using System.Windows;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
+using System.Linq.Expressions;
 
 namespace PCSX2_Configurator_Next
 {
@@ -20,7 +23,16 @@ namespace PCSX2_Configurator_Next
 
         public bool GetIsValidForGame(IGame selectedGame)
         {
-            return selectedGame.Platform == "Sony Playstation 2";
+            var isValidForGame = selectedGame.Platform == "Sony Playstation 2";
+
+            // This is a Hack
+            // SetGameParams Method *Should* be private (Hence Use of Reflection)
+            // This is less than perfect, and does not always function as expected.
+            if (isValidForGame && Configurator.IsGameConfigured(selectedGame))
+                typeof(Configurator).GetMethod("SetGameParams", BindingFlags.NonPublic | BindingFlags.Static)
+                    ?.Invoke(null, new object[] {selectedGame});
+
+            return isValidForGame;
         }
 
         public bool GetIsValidForGames(IGame[] selectedGames)
