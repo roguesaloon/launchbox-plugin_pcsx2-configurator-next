@@ -14,20 +14,35 @@ namespace PCSX2_Configurator_Next
         public static string PluginDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LaunchBoxDirectory => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-        public static string GetPcsx2AppPath()
+        private static IEmulator GetPcsx2Emulator()
         {
             var emulators = PluginHelper.DataManager.GetAllEmulators();
             foreach (var emulator in emulators)
             {
                 if (!emulator.Title.ToLower().Contains("pcsx2")) continue;
 
-                var appPath = emulator.ApplicationPath;
-                appPath = (!Path.IsPathRooted(appPath)) ? LaunchBoxDirectory + "\\" + appPath : appPath;
-
-                return File.Exists(appPath) ? appPath : null;
+                return emulator;
             }
 
             return null;
+        }
+
+        public static string GetPcsx2AppPath(bool absolutePath = true)
+        {
+            var pcsx2Emulator = GetPcsx2Emulator();
+
+            var appPath = pcsx2Emulator.ApplicationPath;
+            var absolutAppPath = LaunchBoxDirectory + "\\" + appPath;
+
+            appPath = (!Path.IsPathRooted(appPath) && absolutePath) ? absolutAppPath : appPath;
+
+            return File.Exists(absolutAppPath) ? appPath : null;
+        }
+
+        public static string GetPcsx2CommandLine()
+        {
+            var pcsx2Emulator = GetPcsx2Emulator();
+            return pcsx2Emulator.CommandLine;
         }
 
         public static string GetPcsx2Dir()
@@ -96,8 +111,7 @@ namespace PCSX2_Configurator_Next
         public static void RemoveConfig(IGame game)
         {
             DeleteConfigDir(game);
-
-            // TODO: Clear Command Line and Config Path
+            ClearGameParams(game);
         }
 
         public static void CreateConfig(IGame game)
@@ -110,7 +124,7 @@ namespace PCSX2_Configurator_Next
             CreateUiConfigFile(gameConfigDir, game);
             CopyOtherSettings(gameConfigDir);
 
-            // TODO: Set Command Line and Config Path
+            SetGameParams(game);
         }
 
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
@@ -186,6 +200,26 @@ namespace PCSX2_Configurator_Next
                 var lilyPadSettingsFileName = "LilyPad.ini";
                 File.Copy($"{baseConfigDir}\\{lilyPadSettingsFileName}", $"{targetConfigDir}\\{lilyPadSettingsFileName}", true);
             }
+        }
+
+        private static void SetGameParams(IGame game)
+        {
+            var pcsx2AppPath = GetPcsx2AppPath(absolutePath: false);
+            var pcsx2CommandLine = GetPcsx2CommandLine();
+            var gameConfigDir = GetGameConfigDir(game);
+
+            var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
+
+            game.CommandLine = $"{pcsx2CommandLine} {configCommandLine}";
+            game.ConfigurationPath = pcsx2AppPath;
+            game.ConfigurationCommandLine = configCommandLine;
+        }
+
+        private static void ClearGameParams(IGame game)
+        {
+            game.CommandLine = string.Empty;
+            game.ConfigurationPath = string.Empty;
+            game.ConfigurationCommandLine = string.Empty;
         }
     }
 }

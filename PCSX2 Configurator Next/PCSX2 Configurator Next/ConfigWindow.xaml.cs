@@ -118,7 +118,7 @@ namespace PCSX2_Configurator_Next
 
         private void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            _selectedGame.Configure();
         }
     }
 }

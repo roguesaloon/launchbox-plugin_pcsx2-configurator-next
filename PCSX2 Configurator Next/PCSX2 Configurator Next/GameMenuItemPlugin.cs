@@ -35,7 +35,11 @@ namespace PCSX2_Configurator_Next
                 Owner = Application.Current.MainWindow,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
-            configWindow.Closing += (sender, args) => configWindow.Owner.IsEnabled = true;
+            configWindow.Closing += (sender, args) =>
+            {
+                configWindow.Owner.IsEnabled = true;
+                configWindow.Owner.Focus();
+            };
             configWindow.Owner.IsEnabled = false;
             configWindow.Show();
         }
