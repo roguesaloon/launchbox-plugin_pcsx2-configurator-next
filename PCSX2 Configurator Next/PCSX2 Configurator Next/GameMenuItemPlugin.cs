@@ -1,10 +1,8 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Reflection;
 using System.Windows;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
-using System.Linq.Expressions;
 
 namespace PCSX2_Configurator_Next
 {
