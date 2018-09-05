@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using IniParser;
 using IniParser.Model;
 using Unbroken.LaunchBox.Plugins;
@@ -132,9 +133,7 @@ namespace PCSX2_Configurator_Next
             var baseConfigDir = GetBaseConfigDir();
             var uiConfigFileName = "PCSX2_ui.ini";
 
-            File.CreateText(targetConfigDir + "\\" + uiConfigFileName).Dispose();
             var iniParser = new FileIniDataParser();
-
             var baseUiConfig = iniParser.ReadFile(baseConfigDir + "\\" + uiConfigFileName);
             var targetUiConfig = new IniData();
 
@@ -169,7 +168,7 @@ namespace PCSX2_Configurator_Next
             targetUiConfig.Global["CurrentIso"] = isoPath.Replace("\\", "\\\\");
             targetUiConfig.Global["AskOnBoot"] = "disabled";
 
-            iniParser.WriteFile(targetConfigDir + "\\" + uiConfigFileName, targetUiConfig);
+            iniParser.WriteFile(targetConfigDir + "\\" + uiConfigFileName, targetUiConfig, Encoding.UTF8);
         }
 
         [SuppressMessage("ReSharper", "InvertIf")]

@@ -1,4 +1,7 @@
-﻿using IniParser;
+﻿using System.IO;
+using System.Text;
+using IniParser;
+using IniParser.Model;
 
 namespace PCSX2_Configurator_Next
 {
@@ -6,34 +9,65 @@ namespace PCSX2_Configurator_Next
     {
         static SettingsModel()
         {
-            // TODO: Auto Generate Settings File if Not Exist
+            var settingsFilePath = Configurator.PluginDirectory + "\\Settings.ini";
+            var settings = typeof(SettingsModel).GetProperties();
             var iniParser = new FileIniDataParser();
-            var settingsFile = iniParser.ReadFile(Configurator.PluginDirectory + "\\Settings.ini");
 
-            // TODO?: Use reflection to get all settings
-            GameConfigsDir = settingsFile["PCSX2_Configurator"]["GameConfigsDir"];
-            CopyLogSettings = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyLogSettings"]);
-            CopyFolderSettings = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyFolderSettings"]);
-            CopyFileSettings = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyFileSettings"]);
-            CopyWindowSettings = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyWindowSettings"]);
-            UseIndependantMemCards = bool.Parse(settingsFile["PCSX2_Configurator"]["UseIndependantMemCards"]);
-            ExposeAllConfigSettings = bool.Parse(settingsFile["PCSX2_Configurator"]["ExposeAllConfigSettings"]);
-            CopyVmSettingsFile = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyVmSettingsFile"]);
-            CopyGsdxSettingsFile = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyGsdxSettingsFile"]);
-            CopySpu2XSettingsFile = bool.Parse(settingsFile["PCSX2_Configurator"]["CopySpu2XSettingsFile"]);
-            CopyLilyPadSettingsFile = bool.Parse(settingsFile["PCSX2_Configurator"]["CopyLilyPadSettingsFile"]);
+            if (!File.Exists(settingsFilePath))
+            {
+                GeneratSettingsFile();
+            }
+            else
+            {
+                ReadFromSettingsFile();
+            }
+
+
+            void GeneratSettingsFile()
+            {
+                var settingsFile = new IniData();
+
+                foreach (var setting in settings)
+                {
+                    var value = setting.GetValue(null).ToString();
+                    value = setting.PropertyType == typeof(bool) ? value.ToLower() : value;
+                    settingsFile["PCSX2_Configurator"][setting.Name] = value;
+                }
+
+                iniParser.WriteFile(settingsFilePath, settingsFile, Encoding.UTF8);
+            }
+
+            void ReadFromSettingsFile()
+            {
+                var settingsFile = iniParser.ReadFile(settingsFilePath);
+
+                foreach (var setting in settings)
+                {
+                    var settingString = settingsFile["PCSX2_Configurator"][setting.Name];
+
+                    if (setting.PropertyType == typeof(bool))
+                    {
+                        var value = bool.Parse(settingString);
+                        setting.SetValue(null, value);
+                    }
+                    else
+                    {
+                        setting.SetValue(null, settingString);
+                    }
+                }
+            }
         }
 
-        public static string GameConfigsDir { get; }
-        public static bool CopyLogSettings { get; }
-        public static bool CopyFolderSettings { get; }
-        public static bool CopyFileSettings { get; }
-        public static bool CopyWindowSettings { get; }
-        public static bool UseIndependantMemCards { get; }
-        public static bool ExposeAllConfigSettings { get; }
-        public static bool CopyVmSettingsFile { get; }
-        public static bool CopyGsdxSettingsFile { get; }
-        public static bool CopySpu2XSettingsFile { get; }
-        public static bool CopyLilyPadSettingsFile { get; }
+        public static string GameConfigsDir { get; internal set; } = $"{Configurator.GetPcsx2Dir()}\\inis";
+        public static bool CopyLogSettings { get; internal set; } = true;
+        public static bool CopyFolderSettings { get; internal set; } = false;
+        public static bool CopyFileSettings { get; internal set; } = true;
+        public static bool CopyWindowSettings { get; internal set; } = true;
+        public static bool UseIndependantMemCards { get; internal set; } = true;
+        public static bool ExposeAllConfigSettings { get; internal set; } = false;
+        public static bool CopyVmSettingsFile { get; internal set; } = true;
+        public static bool CopyGsdxSettingsFile { get; internal set; } = true;
+        public static bool CopySpu2XSettingsFile { get; internal set; } = false;
+        public static bool CopyLilyPadSettingsFile { get; internal set; } = false;
     }
 }
