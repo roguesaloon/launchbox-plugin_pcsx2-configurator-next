@@ -28,7 +28,7 @@ namespace PCSX2_Configurator_Next
             // This is a Hack
             // SetGameParams Method *Should* be private (Hence Use of Reflection)
             // This is less than perfect, and does not always function as expected.
-            if (isValidForGame && Configurator.IsGameConfigured(selectedGame))
+            if (isValidForGame && Configurator.IsGameConfigured(selectedGame) && string.IsNullOrEmpty(selectedGame.ConfigurationPath))
                 typeof(Configurator).GetMethod("SetGameParams", BindingFlags.NonPublic | BindingFlags.Static)
                     ?.Invoke(null, new object[] {selectedGame});
 
@@ -58,7 +58,6 @@ namespace PCSX2_Configurator_Next
 
         public void OnSelected(IGame[] selectedGames)
         {
-
         }
     }
 }
