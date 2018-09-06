@@ -115,6 +115,11 @@ namespace PCSX2_Configurator_Next
             ClearGameParams(game);
         }
 
+        public static void SetConfigParamsForGame(IGame game)
+        {
+            SetGameParams(game);
+        }
+
         public static void CreateConfig(IGame game)
         {
             var gameConfigDir = GetGameConfigDir(game);

@@ -24,11 +24,10 @@ namespace PCSX2_Configurator_Next
             var isValidForGame = selectedGame.Platform == "Sony Playstation 2";
 
             // This is a Hack
-            // SetGameParams Method *Should* be private (Hence Use of Reflection)
+            // May be good idea to call this, but not here (Should be on a slectionChanged Event)
             // This is less than perfect, and does not always function as expected.
             if (isValidForGame && Configurator.IsGameConfigured(selectedGame) && string.IsNullOrEmpty(selectedGame.ConfigurationPath))
-                typeof(Configurator).GetMethod("SetGameParams", BindingFlags.NonPublic | BindingFlags.Static)
-                    ?.Invoke(null, new object[] {selectedGame});
+                Configurator.SetConfigParamsForGame(selectedGame);
 
             return isValidForGame;
         }

@@ -55,11 +55,11 @@ namespace PCSX2_Configurator_Next
             control.Foreground = Brushes.DarkGray;
         }
 
-        private static void EnableControl(FrameworkElement control)
+        private static void EnableControl(Control control)
         {
             control.Cursor = Cursors.Hand;
             control.IsEnabled = true;
-            control.ClearValue(ForegroundProperty);
+            control.Foreground = Brushes.Black;
         }
 
         private void SetupEvents()
