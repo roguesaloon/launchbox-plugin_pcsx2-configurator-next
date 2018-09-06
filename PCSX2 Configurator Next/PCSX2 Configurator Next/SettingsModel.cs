@@ -7,7 +7,7 @@ namespace PCSX2_Configurator_Next
 {
     public static class SettingsModel
     {
-        static SettingsModel()
+        public static void Init()
         {
             var settingsFilePath = Configurator.PluginDirectory + "\\Settings.ini";
             var settings = typeof(SettingsModel).GetProperties();

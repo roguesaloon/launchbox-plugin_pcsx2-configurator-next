@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.XPath;
 using IniParser;
 using IniParser.Model;
 using Unbroken.LaunchBox.Plugins;
@@ -12,6 +13,14 @@ namespace PCSX2_Configurator_Next
 {
     public static class Configurator
     {
+        private static XPathNavigator _launchBoxDatabaseNavigator;
+
+        public static void Init()
+        {
+            var launchBoxDatabaseDocument = new XPathDocument(LaunchBoxDirectory + "\\Metadata\\Metadata.xml");
+            _launchBoxDatabaseNavigator = launchBoxDatabaseDocument.CreateNavigator();
+        }
+
         public static string PluginDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LaunchBoxDirectory => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
@@ -26,6 +35,15 @@ namespace PCSX2_Configurator_Next
             }
 
             return null;
+        }
+
+        private static string GetLaunchBoxDbGameName(IGame game)
+        {
+            var dbNavigator = _launchBoxDatabaseNavigator;
+            var gameDbEntry = dbNavigator.SelectSingleNode("//Game[DatabaseID=\"" + game.LaunchBoxDbId + "\"]");
+            var dbGameName = gameDbEntry?.SelectSingleNode("descendant::Name")?.InnerXml;
+
+            return dbGameName;
         }
 
         public static string GetPcsx2AppPath(bool absolutePath = true)
@@ -70,16 +88,18 @@ namespace PCSX2_Configurator_Next
             return memCardsDir;
         }
 
-        public static string GetSafeGameName(string gameName)
+        public static string GetSafeGameTitle(IGame game)
         {
-            var safeName = Path.GetInvalidFileNameChars().Aggregate(gameName, (s, c) => s.Replace(c.ToString(), ""));
-            return safeName;
+            var dbGameName = GetLaunchBoxDbGameName(game);
+            var safeTitle = (!string.IsNullOrEmpty(dbGameName)) ? dbGameName : game.Title;
+            safeTitle = Path.GetInvalidFileNameChars().Aggregate(safeTitle, (s, c) => s.Replace(c.ToString(), ""));
+            return safeTitle;
         }
 
         public static string GetGameConfigDir(IGame game)
         {
-            var safeGameName = GetSafeGameName(game.Title);
-            var gameConfigDir = SettingsModel.GameConfigsDir + "\\" + safeGameName;
+            var safeGameTitle = GetSafeGameTitle(game);
+            var gameConfigDir = SettingsModel.GameConfigsDir + "\\" + safeGameTitle;
             return gameConfigDir;
         }
 
@@ -152,8 +172,8 @@ namespace PCSX2_Configurator_Next
                 // TODO: Extract Formatted Memory Card
 
                 var memCardsDir = GetMemCardsDir();
-                var safeGameName = GetSafeGameName(game.Title);
-                var memCardFilePath = $"{memCardsDir}\\{safeGameName.Replace(" ", "")}.ps2";
+                var safeGameTitle = GetSafeGameTitle(game);
+                var memCardFilePath = $"{memCardsDir}\\{safeGameTitle.Replace(" ", "")}.ps2";
 
                 targetUiConfig["MemoryCards"]["Slot1_Enable"] = "enabled";
                 targetUiConfig["MemoryCards"]["Slot1_Filename"] = Path.GetFileName(memCardFilePath);
