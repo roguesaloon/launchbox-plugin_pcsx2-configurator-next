@@ -13,16 +13,14 @@ namespace PCSX2_Configurator_Next
 {
     public static class Configurator
     {
-        private static XPathNavigator _launchBoxDatabaseNavigator;
-
-        public static void Init()
-        {
-            var launchBoxDatabaseDocument = new XPathDocument(LaunchBoxDirectory + "\\Metadata\\Metadata.xml");
-            _launchBoxDatabaseNavigator = launchBoxDatabaseDocument.CreateNavigator();
-        }
 
         public static string PluginDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LaunchBoxDirectory => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+        public static bool GetIsValidForGame(IGame game)
+        {
+            return game.Platform == "Sony Playstation 2";
+        }
 
         private static IEmulator GetPcsx2Emulator()
         {
@@ -35,15 +33,6 @@ namespace PCSX2_Configurator_Next
             }
 
             return null;
-        }
-
-        private static string GetLaunchBoxDbGameName(IGame game)
-        {
-            var dbNavigator = _launchBoxDatabaseNavigator;
-            var gameDbEntry = dbNavigator.SelectSingleNode("//Game[DatabaseID=\"" + game.LaunchBoxDbId + "\"]");
-            var dbGameName = gameDbEntry?.SelectSingleNode("descendant::Name")?.InnerXml;
-
-            return dbGameName;
         }
 
         public static string GetPcsx2AppPath(bool absolutePath = true)
@@ -90,9 +79,7 @@ namespace PCSX2_Configurator_Next
 
         public static string GetSafeGameTitle(IGame game)
         {
-            var dbGameName = GetLaunchBoxDbGameName(game);
-            var safeTitle = (!string.IsNullOrEmpty(dbGameName)) ? dbGameName : game.Title;
-            safeTitle = Path.GetInvalidFileNameChars().Aggregate(safeTitle, (s, c) => s.Replace(c.ToString(), ""));
+            var safeTitle = Path.GetInvalidFileNameChars().Aggregate(game.Title, (s, c) => s.Replace(c.ToString(), ""));
             return safeTitle;
         }
 

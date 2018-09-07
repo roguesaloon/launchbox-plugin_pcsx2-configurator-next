@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Linq;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
@@ -6,15 +6,35 @@ namespace PCSX2_Configurator_Next
 {
     internal class SystemEventsPlugin : ISystemEventsPlugin
     {
-        [SuppressMessage("ReSharper", "InvertIf")]
         public void OnEventRaised(string eventType)
         {
             //Task.Run(() => MessageBox.Show(new Form { TopMost = true }, eventType));
 
-            if (eventType == SystemEventTypes.PluginInitialized)
+            
+            switch (eventType)
             {
-                SettingsModel.Init();
-                Configurator.Init();
+                case SystemEventTypes.PluginInitialized:
+                    OnPluginInitialized();
+                    break;
+                case SystemEventTypes.SelectionChanged:
+                    OnSelectionChaged();
+                    break;
+            }
+        }
+
+        private static void OnPluginInitialized()
+        {
+            SettingsModel.Init();
+        }
+
+        private static void OnSelectionChaged()
+        {
+            var selectedGame = PluginHelper.StateManager.GetAllSelectedGames().FirstOrDefault();
+
+            if (Configurator.GetIsValidForGame(selectedGame) && Configurator.IsGameConfigured(selectedGame) &&
+                string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
+            {
+                Configurator.SetConfigParamsForGame(selectedGame);
             }
         }
     }

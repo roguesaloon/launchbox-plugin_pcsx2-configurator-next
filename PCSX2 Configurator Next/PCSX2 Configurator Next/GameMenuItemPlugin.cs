@@ -8,6 +8,7 @@ namespace PCSX2_Configurator_Next
 {
     internal class GameMenuItemPlugin : IGameMenuItemPlugin
     {
+        
 
         public bool SupportsMultipleGames => false;
 
@@ -21,15 +22,7 @@ namespace PCSX2_Configurator_Next
 
         public bool GetIsValidForGame(IGame selectedGame)
         {
-            var isValidForGame = selectedGame.Platform == "Sony Playstation 2";
-
-            // This is a Hack
-            // May be good idea to call this, but not here (Should be on a slectionChanged Event)
-            // This is less than perfect, and does not always function as expected.
-            if (isValidForGame && Configurator.IsGameConfigured(selectedGame) && string.IsNullOrEmpty(selectedGame.ConfigurationPath))
-                Configurator.SetConfigParamsForGame(selectedGame);
-
-            return isValidForGame;
+            return Configurator.GetIsValidForGame(selectedGame);
         }
 
         public bool GetIsValidForGames(IGame[] selectedGames)
