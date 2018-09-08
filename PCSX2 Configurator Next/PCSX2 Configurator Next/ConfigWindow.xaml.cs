@@ -87,14 +87,19 @@ namespace PCSX2_Configurator_Next
 
             if (!createConfig) return;
             Configurator.CreateConfig(_selectedGame);
+            MessageBox.Show("Game Successfully Configured", Title);
             InitializeConfigWindow();
 
-            MessageBox.Show("Game Successfully Configured", Title);
         }
 
         private void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            // TODO: This is a Placeholder, To have multiple states
+            Mouse.OverrideCursor = Cursors.Wait;
+            var result = Configurator.DownloadConfig(_selectedGame);
+            Mouse.OverrideCursor = Cursors.Arrow;
+            MessageBox.Show(result ? "Game Config Downloaded Successfully" : "Could Not Download Game Config");
+            InitializeConfigWindow();
         }
 
         private void RemoveConfigBtn_Click(object sender, RoutedEventArgs e)

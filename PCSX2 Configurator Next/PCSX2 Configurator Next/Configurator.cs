@@ -1,9 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Xml.XPath;
 using IniParser;
 using IniParser.Model;
 using Unbroken.LaunchBox.Plugins;
@@ -13,16 +13,17 @@ namespace PCSX2_Configurator_Next
 {
     public static class Configurator
     {
-
         public static string PluginDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LaunchBoxDirectory => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+        public static string RemoteConfigsDir => "https://github.com/Zombeaver/PCSX2-Configs/trunk/Game%20Configs";
+        public static string LocalRemoteConfigsDir => $"{PluginDirectory}\\remote";
 
         public static bool GetIsValidForGame(IGame game)
         {
             return game.Platform == "Sony Playstation 2";
         }
 
-        private static IEmulator GetPcsx2Emulator()
+        public static IEmulator GetPcsx2Emulator()
         {
             var emulators = PluginHelper.DataManager.GetAllEmulators();
             foreach (var emulator in emulators)
@@ -119,12 +120,7 @@ namespace PCSX2_Configurator_Next
         public static void RemoveConfig(IGame game)
         {
             DeleteConfigDir(game);
-            ClearGameParams(game);
-        }
-
-        public static void SetConfigParamsForGame(IGame game)
-        {
-            SetGameParams(game);
+            ClearGameConfigParams(game);
         }
 
         public static void CreateConfig(IGame game)
@@ -137,7 +133,21 @@ namespace PCSX2_Configurator_Next
             CreateUiConfigFile(gameConfigDir, game);
             CopyOtherSettings(gameConfigDir);
 
-            SetGameParams(game);
+            SetGameConfigParams(game);
+        }
+
+        [SuppressMessage("ReSharper", "InvertIf")]
+        public static bool DownloadConfig(IGame game)
+        {
+            var downloadConfigResult = DownloadConfigFromRemote(game.LaunchBoxDbId);
+
+            if (downloadConfigResult.Status == "Downloaded")
+            {
+                ApplyRemoteConfig(game, downloadConfigResult.GameConfigRemoteDir);
+                return true;
+            }
+
+            return false;
         }
 
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
@@ -213,7 +223,7 @@ namespace PCSX2_Configurator_Next
             }
         }
 
-        private static void SetGameParams(IGame game)
+        public static void SetGameConfigParams(IGame game)
         {
             var pcsx2AppPath = GetPcsx2AppPath(absolutePath: false);
             var pcsx2CommandLine = GetPcsx2CommandLine();
@@ -226,11 +236,95 @@ namespace PCSX2_Configurator_Next
             game.ConfigurationCommandLine = configCommandLine;
         }
 
-        private static void ClearGameParams(IGame game)
+        public static void ClearGameConfigParams(IGame game)
         {
             game.CommandLine = string.Empty;
             game.ConfigurationPath = string.Empty;
             game.ConfigurationCommandLine = string.Empty;
+        }
+
+        public struct DownloadStatus
+        {
+            public string Status;
+            public string GameConfigRemoteDir;
+        }
+
+        private static DownloadStatus DownloadConfigFromRemote(int? launchBoxDbId)
+        {
+            if (launchBoxDbId == null) return new DownloadStatus { Status = "Invalid"};
+
+            if (!Directory.Exists(LocalRemoteConfigsDir))
+            {
+                Directory.CreateDirectory(LocalRemoteConfigsDir).Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+            }
+
+            var svnProcess = new Process
+            {
+                StartInfo =
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    FileName = $"{LaunchBoxDirectory}\\SVN\\bin\\svn.exe",
+                    WorkingDirectory = LocalRemoteConfigsDir
+                }
+            };
+
+            svnProcess.StartInfo.Arguments = $"list {RemoteConfigsDir}";
+            svnProcess.Start();
+            var svnStdOut = svnProcess.StandardOutput.ReadToEnd();
+            svnProcess.WaitForExit();
+
+            var gameList = svnStdOut.Replace("\r\n", "\n").Split('\n');
+            var selectedGamePath = gameList.FirstOrDefault(_ => _.Contains($"id#{launchBoxDbId}"));
+
+            if (selectedGamePath == null) return new DownloadStatus { Status = "Not Found" };
+
+            selectedGamePath = selectedGamePath.Substring(0, selectedGamePath.Length - 1);
+            svnProcess.StartInfo.Arguments = $"checkout \"{RemoteConfigsDir}/{selectedGamePath}\"";
+            svnProcess.Start();
+            svnProcess.WaitForExit();
+
+            return new DownloadStatus { Status = "Downloaded", GameConfigRemoteDir = $"{LocalRemoteConfigsDir}\\{selectedGamePath}" };
+        }
+
+        [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
+        private static void ApplyRemoteConfig(IGame game, string gameConfigRemoteDir)
+        {
+            CreateConfig(game);
+
+            var targetGameConfigDir = GetGameConfigDir(game);
+
+            foreach (var file in Directory.GetFiles(gameConfigRemoteDir))
+            {
+                if (file.ToLower().Contains("readme")) continue;
+                File.Copy(file, $"{targetGameConfigDir}\\{Path.GetFileName(file)}", overwrite: true);
+            }
+
+            var remoteFile = $"{targetGameConfigDir}\\remote";
+            if (!File.Exists(remoteFile))
+            {
+                File.Create($"{targetGameConfigDir}\\remote").Dispose();
+            }
+
+            var iniParser = new FileIniDataParser();
+            var targetUiConfigFilePath = $"{targetGameConfigDir}\\PCSX2_ui.ini";
+            var uiTweaksFilePath = $"{targetGameConfigDir}\\PCSX2_ui-tweak.ini";
+
+            var targetUiConfig = iniParser.ReadFile(targetUiConfigFilePath);
+
+            targetUiConfig.Global["EnablePresets"] = "disabled";
+            targetUiConfig.Global["EnableGameFixes"] = "enabled";
+            targetUiConfig.Global["EnableSpeedHacks"] = "enabled";
+            targetUiConfig["GSWindow"]["Zoom"] = "101.00";
+
+            if (File.Exists(uiTweaksFilePath))
+            {
+                var uiTweakConfig = iniParser.ReadFile(uiTweaksFilePath);
+                targetUiConfig.Merge(uiTweakConfig);
+            }
+
+            iniParser.WriteFile(targetUiConfigFilePath, targetUiConfig, Encoding.UTF8);
         }
     }
 }

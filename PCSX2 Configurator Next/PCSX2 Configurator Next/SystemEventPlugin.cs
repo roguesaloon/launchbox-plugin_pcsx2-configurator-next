@@ -1,7 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
+
 
 namespace PCSX2_Configurator_Next
 {
@@ -27,6 +32,7 @@ namespace PCSX2_Configurator_Next
 
         private static void OnPluginInitialized()
         {
+            DownloadSvn();
             SettingsModel.Init();
         }
 
@@ -34,10 +40,33 @@ namespace PCSX2_Configurator_Next
         {
             var selectedGame = PluginHelper.StateManager.GetAllSelectedGames().FirstOrDefault();
 
-            if (Configurator.GetIsValidForGame(selectedGame) && Configurator.IsGameConfigured(selectedGame) &&
-                string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
+            if (Configurator.GetIsValidForGame(selectedGame))
             {
-                Configurator.SetConfigParamsForGame(selectedGame);
+                if (Configurator.IsGameConfigured(selectedGame) &&
+                    string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
+                {
+                    Configurator.SetGameConfigParams(selectedGame);
+                }
+
+                if(!Configurator.IsGameConfigured(selectedGame) && !string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
+                {
+                    Configurator.ClearGameConfigParams(selectedGame);
+                }
+            }
+        }
+
+        private static void DownloadSvn()
+        {
+            if (Directory.Exists(Configurator.LaunchBoxDirectory + "\\SVN")) return;
+            try
+            {
+                new WebClient().DownloadFile("https://www.visualsvn.com/files/Apache-Subversion-1.10.2.zip", Configurator.LaunchBoxDirectory + "\\SVN.zip");
+                ZipFile.ExtractToDirectory(Configurator.LaunchBoxDirectory + "\\SVN.zip", Configurator.LaunchBoxDirectory + "\\SVN");
+                File.Delete(Configurator.LaunchBoxDirectory + "\\SVN.zip");
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
     }
