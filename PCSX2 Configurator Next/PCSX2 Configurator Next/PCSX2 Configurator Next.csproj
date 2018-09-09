@@ -55,10 +55,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfiguratorModel.cs" />
     <Compile Include="Configurator.cs" />
     <Compile Include="ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GameHelper.cs" />
     <Compile Include="GameMenuItemPlugin.cs" />
     <Compile Include="SettingsModel.cs" />
     <Compile Include="SystemEventPlugin.cs" />

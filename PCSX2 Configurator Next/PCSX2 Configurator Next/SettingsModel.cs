@@ -9,7 +9,7 @@ namespace PCSX2_Configurator_Next
     {
         public static void Init()
         {
-            var settingsFilePath = Configurator.PluginDirectory + "\\Settings.ini";
+            var settingsFilePath = $"{ConfiguratorModel.PluginDir}\\Settings.ini";
             var settings = typeof(SettingsModel).GetProperties();
             var iniParser = new FileIniDataParser();
 
@@ -58,7 +58,7 @@ namespace PCSX2_Configurator_Next
             }
         }
 
-        public static string GameConfigsDir { get; internal set; } = $"{Configurator.GetPcsx2Dir()}\\inis";
+        public static string GameConfigsDir { get; internal set; } = ConfiguratorModel.Pcsx2InisDir;
         public static bool CopyLogSettings { get; internal set; } = true;
         public static bool CopyFolderSettings { get; internal set; } = false;
         public static bool CopyFileSettings { get; internal set; } = true;

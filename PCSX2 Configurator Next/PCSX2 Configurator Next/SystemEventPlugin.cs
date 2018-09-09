@@ -40,29 +40,31 @@ namespace PCSX2_Configurator_Next
         {
             var selectedGame = PluginHelper.StateManager.GetAllSelectedGames().FirstOrDefault();
 
-            if (Configurator.GetIsValidForGame(selectedGame))
-            {
-                if (Configurator.IsGameConfigured(selectedGame) &&
-                    string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
-                {
-                    Configurator.SetGameConfigParams(selectedGame);
-                }
+            if (!GameHelper.IsValidForGame(selectedGame)) return;
 
-                if(!Configurator.IsGameConfigured(selectedGame) && !string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
-                {
-                    Configurator.ClearGameConfigParams(selectedGame);
-                }
+            if (GameHelper.IsGameConfigured(selectedGame) &&
+                string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
+            {
+                Configurator.SetGameConfigParams(selectedGame);
+            }
+
+            if(!GameHelper.IsGameConfigured(selectedGame) && !string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
+            {
+                Configurator.ClearGameConfigParams(selectedGame);
             }
         }
 
         private static void DownloadSvn()
         {
-            if (Directory.Exists(Configurator.LaunchBoxDirectory + "\\SVN")) return;
+            var svnDir = $"{ConfiguratorModel.LaunchBoxDir}\\SVN";
+            var svnZip = $"{ConfiguratorModel.LaunchBoxDir}\\SVN.zip";
+
+            if (Directory.Exists(svnDir)) return;
             try
             {
-                new WebClient().DownloadFile("https://www.visualsvn.com/files/Apache-Subversion-1.10.2.zip", Configurator.LaunchBoxDirectory + "\\SVN.zip");
-                ZipFile.ExtractToDirectory(Configurator.LaunchBoxDirectory + "\\SVN.zip", Configurator.LaunchBoxDirectory + "\\SVN");
-                File.Delete(Configurator.LaunchBoxDirectory + "\\SVN.zip");
+                new WebClient().DownloadFile("https://www.visualsvn.com/files/Apache-Subversion-1.10.2.zip", svnZip);
+                ZipFile.ExtractToDirectory(svnZip, svnDir);
+                File.Delete(svnZip);
             }
             catch (Exception)
             {

@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Reflection;
 using System.Windows;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
@@ -8,8 +7,6 @@ namespace PCSX2_Configurator_Next
 {
     internal class GameMenuItemPlugin : IGameMenuItemPlugin
     {
-        
-
         public bool SupportsMultipleGames => false;
 
         public string Caption => "PCSX2 Configurator";
@@ -22,7 +19,7 @@ namespace PCSX2_Configurator_Next
 
         public bool GetIsValidForGame(IGame selectedGame)
         {
-            return Configurator.GetIsValidForGame(selectedGame);
+            return GameHelper.IsValidForGame(selectedGame);
         }
 
         public bool GetIsValidForGames(IGame[] selectedGames)
