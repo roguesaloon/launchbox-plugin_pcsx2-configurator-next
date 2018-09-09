@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -27,16 +26,16 @@ namespace PCSX2_Configurator_Next
         {
             ConfiguredLbl.Content = "[Game Name]: [Configured]";
             ConfiguredLbl.Content = ConfiguredLbl.Content.ToString().Replace("[Game Name]", _selectedGame.Title);
-            ConfiguredLbl.Content = Configurator.IsGameConfigured(_selectedGame)
+            ConfiguredLbl.Content = GameHelper.IsGameConfigured(_selectedGame)
                 ? ConfiguredLbl.Content.ToString().Replace("[Configured]", "Configured")
                 : ConfiguredLbl.Content.ToString().Replace("[Configured]", "Not Configured");
 
             DownloadConfigBtn.Content = "[Download] Config";
-            DownloadConfigBtn.Content = Configurator.IsGameUsingRemoteConfig(_selectedGame)
+            DownloadConfigBtn.Content = GameHelper.IsGameUsingRemoteConfig(_selectedGame)
                 ? DownloadConfigBtn.Content.ToString().Replace("[Download]", "Update")
                 : DownloadConfigBtn.Content.ToString().Replace("[Download]", "Download");
 
-            if (!Configurator.IsGameConfigured(_selectedGame))
+            if (!GameHelper.IsGameConfigured(_selectedGame))
             {
                 DisableControl(RemoveConfigBtn);
                 DisableControl(Pcsx2Btn);
@@ -73,7 +72,7 @@ namespace PCSX2_Configurator_Next
         private void CreateConfigBtn_Click(object sender, RoutedEventArgs e)
         {
             var createConfig = true;
-            if (Configurator.IsGameConfigured(_selectedGame))
+            if (GameHelper.IsGameConfigured(_selectedGame))
             {
                 var message =
                     "This game is already configured\nThis will overwrite your previous configuration\nDo you still wish to continue?";
@@ -89,7 +88,6 @@ namespace PCSX2_Configurator_Next
             Configurator.CreateConfig(_selectedGame);
             MessageBox.Show("Game Successfully Configured", Title);
             InitializeConfigWindow();
-
         }
 
         private void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)

@@ -9,12 +9,13 @@ using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next
 {
-    public class ConfiguratorModel
+    public static class ConfiguratorModel
     {
         public static string PluginDir => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LaunchBoxDir => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         public static string RemoteConfigsUrl => "https://github.com/Zombeaver/PCSX2-Configs/trunk/Game%20Configs";
         public static string RemoteConfigsDir => $"{PluginDir}\\remote";
+        public static string RemoteConfigDummyFileName => "remote";
         public static string Pcsx2UiFileName => "PCSX2_ui.ini";
         public static string Pcsx2CommandLine => Pcsx2Emulator.CommandLine;
         public static string Pcsx2RelativeAppPath => _pcsx2RelativeAppPath ?? (_pcsx2RelativeAppPath = GetPcsx2AppPath(absolutePath: false));
