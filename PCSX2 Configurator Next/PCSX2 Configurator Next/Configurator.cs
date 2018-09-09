@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Text;
 using IniParser;
 using IniParser.Model;
@@ -11,12 +10,6 @@ namespace PCSX2_Configurator_Next
 {
     public static class Configurator
     {
-        public static void RemoveConfig(IGame game)
-        {
-            DeleteConfigDir(game);
-            ClearGameConfigParams(game);
-        }
-
         public static void CreateConfig(IGame game)
         {
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
@@ -31,17 +24,47 @@ namespace PCSX2_Configurator_Next
         }
 
         [SuppressMessage("ReSharper", "InvertIf")]
-        public static bool DownloadConfig(IGame game)
+        public static bool DownloadConfig(IGame game, string remoteConfigPath)
         {
-            var downloadConfigResult = DownloadConfigFromRemote(game.LaunchBoxDbId);
-
-            if (downloadConfigResult.Status == "Downloaded")
+            if (remoteConfigPath != null)
             {
-                ApplyRemoteConfig(game, downloadConfigResult.GameConfigRemoteDir);
-                return true;
+                var downloadConfigResult = DownloadConfigFromRemote(remoteConfigPath);
+
+                if (downloadConfigResult == "Downloaded")
+                {
+                    var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
+                    ApplyRemoteConfig(game, remoteConfigDir);
+                    return true;
+                }
             }
 
             return false;
+        }
+
+        public static void RemoveConfig(IGame game)
+        {
+            DeleteConfigDir(game);
+            ClearGameConfigParams(game);
+        }
+
+        public static void SetGameConfigParams(IGame game)
+        {
+            var pcsx2AppPath = ConfiguratorModel.Pcsx2RelativeAppPath;
+            var pcsx2CommandLine = ConfiguratorModel.Pcsx2CommandLine;
+            var gameConfigDir = GameHelper.GetGameConfigDir(game);
+
+            var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
+
+            game.CommandLine = $"{pcsx2CommandLine} {configCommandLine}";
+            game.ConfigurationPath = pcsx2AppPath;
+            game.ConfigurationCommandLine = configCommandLine;
+        }
+
+        public static void ClearGameConfigParams(IGame game)
+        {
+            game.CommandLine = string.Empty;
+            game.ConfigurationPath = string.Empty;
+            game.ConfigurationCommandLine = string.Empty;
         }
 
         private static void DeleteConfigDir(IGame game)
@@ -62,10 +85,10 @@ namespace PCSX2_Configurator_Next
             var baseUiConfig = iniParser.ReadFile(baseConfigDir + "\\" + uiConfigFileName);
             var targetUiConfig = new IniData();
 
-            if(SettingsModel.CopyLogSettings)    targetUiConfig["ProgramLog"].Merge(baseUiConfig["ProgramLog"]);
-            if(SettingsModel.CopyFolderSettings) targetUiConfig["Folders"].Merge(baseUiConfig["Folders"]);
-            if(SettingsModel.CopyFileSettings)   targetUiConfig["Filenames"].Merge(baseUiConfig["Filenames"]);
-            if(SettingsModel.CopyWindowSettings) targetUiConfig["GSWindow"].Merge(baseUiConfig["GSWindow"]);
+            if (SettingsModel.CopyLogSettings) targetUiConfig["ProgramLog"].Merge(baseUiConfig["ProgramLog"]);
+            if (SettingsModel.CopyFolderSettings) targetUiConfig["Folders"].Merge(baseUiConfig["Folders"]);
+            if (SettingsModel.CopyFileSettings) targetUiConfig["Filenames"].Merge(baseUiConfig["Filenames"]);
+            if (SettingsModel.CopyWindowSettings) targetUiConfig["GSWindow"].Merge(baseUiConfig["GSWindow"]);
 
             if (SettingsModel.UseIndependantMemCards)
             {
@@ -125,80 +148,26 @@ namespace PCSX2_Configurator_Next
             }
         }
 
-        public static void SetGameConfigParams(IGame game)
+        private static string DownloadConfigFromRemote(string remoteConfigPath)
         {
-            var pcsx2AppPath = ConfiguratorModel.Pcsx2RelativeAppPath;
-            var pcsx2CommandLine = ConfiguratorModel.Pcsx2CommandLine;
-            var gameConfigDir = GameHelper.GetGameConfigDir(game);
-
-            var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
-
-            game.CommandLine = $"{pcsx2CommandLine} {configCommandLine}";
-            game.ConfigurationPath = pcsx2AppPath;
-            game.ConfigurationCommandLine = configCommandLine;
-        }
-
-        public static void ClearGameConfigParams(IGame game)
-        {
-            game.CommandLine = string.Empty;
-            game.ConfigurationPath = string.Empty;
-            game.ConfigurationCommandLine = string.Empty;
-        }
-
-        public struct DownloadStatus
-        {
-            public string Status;
-            public string GameConfigRemoteDir;
-        }
-
-        private static DownloadStatus DownloadConfigFromRemote(int? launchBoxDbId)
-        {
-            if (launchBoxDbId == null) return new DownloadStatus { Status = "Invalid"};
-
             var remoteConfigsDir = ConfiguratorModel.RemoteConfigsDir;
-            if (!Directory.Exists(remoteConfigsDir))
-            {
-                Directory.CreateDirectory(remoteConfigsDir).Attributes = FileAttributes.Directory | FileAttributes.Hidden;
-            }
+            var svnProcess = ConfiguratorModel.SvnProcess;
 
-            var svnProcess = new Process
-            {
-                StartInfo =
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    FileName = $"{ConfiguratorModel.LaunchBoxDir}\\SVN\\bin\\svn.exe",
-                    WorkingDirectory = remoteConfigsDir
-                }
-            };
-
-            svnProcess.StartInfo.Arguments = $"list {ConfiguratorModel.RemoteConfigsUrl}";
-            svnProcess.Start();
-            var svnStdOut = svnProcess.StandardOutput.ReadToEnd();
-            svnProcess.WaitForExit();
-
-            var gameList = svnStdOut.Replace("\r\n", "\n").Split('\n');
-            var selectedGamePath = gameList.FirstOrDefault(_ => _.Contains($"id#{launchBoxDbId}"));
-
-            if (selectedGamePath == null) return new DownloadStatus { Status = "Not Found" };
-
-            selectedGamePath = selectedGamePath.Substring(0, selectedGamePath.Length - 1);
-            svnProcess.StartInfo.Arguments = $"checkout \"{ConfiguratorModel.RemoteConfigsUrl}/{selectedGamePath}\"";
+            svnProcess.StartInfo.Arguments = $"checkout \"{ConfiguratorModel.RemoteConfigsUrl}/{remoteConfigPath}\"";
             svnProcess.Start();
             svnProcess.WaitForExit();
 
-            return new DownloadStatus { Status = "Downloaded", GameConfigRemoteDir = $"{remoteConfigsDir}\\{selectedGamePath}" };
+            return "Downloaded";
         }
 
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
-        private static void ApplyRemoteConfig(IGame game, string gameConfigRemoteDir)
+        private static void ApplyRemoteConfig(IGame game, string remoteConfigDir)
         {
             CreateConfig(game);
 
             var targetGameConfigDir = GameHelper.GetGameConfigDir(game);
 
-            foreach (var file in Directory.GetFiles(gameConfigRemoteDir))
+            foreach (var file in Directory.GetFiles(remoteConfigDir))
             {
                 if (file.ToLower().Contains("readme")) continue;
                 File.Copy(file, $"{targetGameConfigDir}\\{Path.GetFileName(file)}", overwrite: true);

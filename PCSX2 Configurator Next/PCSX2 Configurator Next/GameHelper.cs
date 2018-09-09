@@ -19,6 +19,22 @@ namespace PCSX2_Configurator_Next
             return gameConfigDir;
         }
 
+        public static string GetRemoteConfigPath(IGame game)
+        {
+            var svnProcess = ConfiguratorModel.SvnProcess;
+            svnProcess.StartInfo.Arguments = $"list {ConfiguratorModel.RemoteConfigsUrl}";
+
+            svnProcess.Start();
+            var svnStdOut = svnProcess.StandardOutput.ReadToEnd();
+            svnProcess.WaitForExit();
+
+            var gameList = svnStdOut.Replace("\r\n", "\n").Split('\n');
+            var selectedGamePath = gameList.FirstOrDefault(_ => _.Contains($"id#{game.LaunchBoxDbId}"));
+            selectedGamePath = selectedGamePath?.Substring(0, selectedGamePath.Length - 1);
+
+            return selectedGamePath;
+        }
+
         public static bool IsValidForGame(IGame game)
         {
             // TODO: Expand This

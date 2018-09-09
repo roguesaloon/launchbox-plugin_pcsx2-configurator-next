@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -13,10 +14,12 @@ namespace PCSX2_Configurator_Next
     public partial class ConfigWindow
     {
         private readonly IGame _selectedGame;
+        private readonly Task<string> _selectedGameRemoteConfigPathTask;
 
         public ConfigWindow(IGame selectedGame = null)
         {
             _selectedGame = selectedGame;
+            _selectedGameRemoteConfigPathTask = Task.Run(() => GameHelper.GetRemoteConfigPath(_selectedGame));
             InitializeComponent();
             InitializeConfigWindow();
             SetupEvents();
@@ -94,8 +97,8 @@ namespace PCSX2_Configurator_Next
         {
             // TODO: This is a Placeholder, To have multiple states
             Mouse.OverrideCursor = Cursors.Wait;
-            var result = Configurator.DownloadConfig(_selectedGame);
-            Mouse.OverrideCursor = Cursors.Arrow;
+            var result = Configurator.DownloadConfig(_selectedGame, _selectedGameRemoteConfigPathTask.Result);
+            Mouse.OverrideCursor = null;
             MessageBox.Show(result ? "Game Config Downloaded Successfully" : "Could Not Download Game Config");
             InitializeConfigWindow();
         }

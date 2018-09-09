@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +16,7 @@ namespace PCSX2_Configurator_Next
         public static string PluginDir => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LaunchBoxDir => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         public static string RemoteConfigsUrl => "https://github.com/Zombeaver/PCSX2-Configs/trunk/Game%20Configs";
-        public static string RemoteConfigsDir => $"{PluginDir}\\remote";
+        public static string RemoteConfigsDir => _remoteConfigsDir ?? (_remoteConfigsDir = GetRemoteConfigDir());
         public static string RemoteConfigDummyFileName => "remote";
         public static string Pcsx2UiFileName => "PCSX2_ui.ini";
         public static string Pcsx2CommandLine => Pcsx2Emulator.CommandLine;
@@ -24,6 +26,7 @@ namespace PCSX2_Configurator_Next
         public static string Pcsx2AbsoluteDir => _pcsx2AbsoluteDir ?? (_pcsx2AbsoluteDir = Path.GetDirectoryName(Pcsx2AbsoluteAppPath));
         public static string Pcsx2InisDir => _pcsx2InisDir ?? (_pcsx2InisDir = GetPcsx2InisDir());
         public static string Pcsx2BaseUiFilePath => _pcsx2BaseUiFilePath ?? (_pcsx2BaseUiFilePath = $"{Pcsx2InisDir}\\{Pcsx2UiFileName}");
+        public static Process SvnProcess => _svnProcess ?? (_svnProcess = GetSvnProcess());
 
         private static IEmulator _pcsx2Emulator;
         [SuppressMessage("ReSharper", "InvertIf")]
@@ -39,6 +42,19 @@ namespace PCSX2_Configurator_Next
 
                 return _pcsx2Emulator;
             }
+        }
+
+        private static string _remoteConfigsDir;
+        private static string GetRemoteConfigDir()
+        {
+            var remoteConfigDir = $"{PluginDir}\\remote";
+
+            if (!Directory.Exists(remoteConfigDir))
+            {
+                Directory.CreateDirectory(remoteConfigDir);
+            }
+
+            return remoteConfigDir;
         }
 
         private static string _pcsx2RelativeAppPath;
@@ -69,6 +85,24 @@ namespace PCSX2_Configurator_Next
             }
 
             return pcsx2InisDir;
+        }
+
+        private static Process _svnProcess;
+        private static Process GetSvnProcess()
+        {
+            var svnProcess = new Process
+            {
+                StartInfo =
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    FileName = $"{LaunchBoxDir}\\SVN\\bin\\svn.exe",
+                    WorkingDirectory = RemoteConfigsDir
+                }
+            };
+
+            return svnProcess;
         }
     }
 }
