@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using IniParser;
@@ -150,7 +149,6 @@ namespace PCSX2_Configurator_Next
 
         private static string DownloadConfigFromRemote(string remoteConfigPath)
         {
-            var remoteConfigsDir = ConfiguratorModel.RemoteConfigsDir;
             var svnProcess = ConfiguratorModel.SvnProcess;
 
             svnProcess.StartInfo.Arguments = $"checkout \"{ConfiguratorModel.RemoteConfigsUrl}/{remoteConfigPath}\"";

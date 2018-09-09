@@ -38,6 +38,15 @@ namespace PCSX2_Configurator_Next
                 ? DownloadConfigBtn.Content.ToString().Replace("[Download]", "Update")
                 : DownloadConfigBtn.Content.ToString().Replace("[Download]", "Download");
 
+            DisableControl(DownloadConfigBtn);
+            _selectedGameRemoteConfigPathTask.ContinueWith(remoteConfigPath =>
+            {
+                if (remoteConfigPath.Result != null)
+                {
+                    Dispatcher.Invoke(() => EnableControl(DownloadConfigBtn));
+                }
+            });
+
             if (!GameHelper.IsGameConfigured(_selectedGame))
             {
                 DisableControl(RemoveConfigBtn);
