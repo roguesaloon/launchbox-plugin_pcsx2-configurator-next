@@ -134,6 +134,7 @@ namespace PCSX2_Configurator_Next
         private void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
         {
             _selectedGame.Configure();
+            Close();
         }
     }
 }
