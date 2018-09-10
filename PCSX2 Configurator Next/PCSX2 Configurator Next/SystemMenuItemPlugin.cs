@@ -10,7 +10,7 @@ namespace PCSX2_Configurator_Next
 
         public Image IconImage => null;
 
-        public bool ShowInLaunchBox => true;
+        public bool ShowInLaunchBox => false;
 
         public bool ShowInBigBox => false;
 
