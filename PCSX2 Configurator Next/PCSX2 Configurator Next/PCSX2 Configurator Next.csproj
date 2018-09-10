@@ -62,6 +62,7 @@
     </Compile>
     <Compile Include="GameHelper.cs" />
     <Compile Include="GameMenuItemPlugin.cs" />
+    <Compile Include="OutlinedTextBlock.cs" />
     <Compile Include="SettingsModel.cs" />
     <Compile Include="SystemEventPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
