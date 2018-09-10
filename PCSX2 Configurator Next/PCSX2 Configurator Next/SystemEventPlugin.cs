@@ -39,19 +39,7 @@ namespace PCSX2_Configurator_Next
         private static void OnSelectionChanged()
         {
             var selectedGame = PluginHelper.StateManager.GetAllSelectedGames().FirstOrDefault();
-
-            if (!GameHelper.IsValidForGame(selectedGame)) return;
-
-            if (GameHelper.IsGameConfigured(selectedGame) &&
-                string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
-            {
-                Configurator.SetGameConfigParams(selectedGame);
-            }
-
-            if(!GameHelper.IsGameConfigured(selectedGame) && !string.IsNullOrEmpty(selectedGame?.ConfigurationPath))
-            {
-                Configurator.ClearGameConfigParams(selectedGame);
-            }
+            Configurator.ApplyGameConfigParams(selectedGame);
         }
 
         private static void DownloadSvn()

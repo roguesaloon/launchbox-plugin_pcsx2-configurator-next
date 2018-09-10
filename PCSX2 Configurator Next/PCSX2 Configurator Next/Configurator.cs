@@ -46,7 +46,23 @@ namespace PCSX2_Configurator_Next
             ClearGameConfigParams(game);
         }
 
-        public static void SetGameConfigParams(IGame game)
+        public static void ApplyGameConfigParams(IGame game)
+        {
+            if (!GameHelper.IsValidForGame(game)) return;
+
+            if (GameHelper.IsGameConfigured(game) &&
+                string.IsNullOrEmpty(game?.ConfigurationPath))
+            {
+                SetGameConfigParams(game);
+            }
+
+            if (!GameHelper.IsGameConfigured(game) && !string.IsNullOrEmpty(game?.ConfigurationPath))
+            {
+                ClearGameConfigParams(game);
+            }
+        }
+
+        private static void SetGameConfigParams(IGame game)
         {
             var pcsx2AppPath = ConfiguratorModel.Pcsx2RelativeAppPath;
             var pcsx2CommandLine = ConfiguratorModel.Pcsx2CommandLine;
@@ -59,7 +75,7 @@ namespace PCSX2_Configurator_Next
             game.ConfigurationCommandLine = configCommandLine;
         }
 
-        public static void ClearGameConfigParams(IGame game)
+        private static void ClearGameConfigParams(IGame game)
         {
             game.CommandLine = string.Empty;
             game.ConfigurationPath = string.Empty;

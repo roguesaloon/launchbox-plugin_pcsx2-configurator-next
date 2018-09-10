@@ -19,6 +19,7 @@ namespace PCSX2_Configurator_Next
 
         public bool GetIsValidForGame(IGame selectedGame)
         {
+            Configurator.ApplyGameConfigParams(selectedGame);
             return GameHelper.IsValidForGame(selectedGame);
         }
 
