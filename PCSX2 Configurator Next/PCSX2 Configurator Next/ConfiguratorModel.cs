@@ -16,7 +16,7 @@ namespace PCSX2_Configurator_Next
         public static string PluginDir => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string LaunchBoxDir => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         public static string RemoteConfigsUrl => "https://github.com/Zombeaver/PCSX2-Configs/trunk/Game%20Configs";
-        public static string RemoteConfigsDir => _remoteConfigsDir ?? (_remoteConfigsDir = GetRemoteConfigDir());
+        public static string RemoteConfigsDir => _remoteConfigsDir ?? (_remoteConfigsDir = GetRemoteConfigsDir());
         public static string RemoteConfigDummyFileName => "remote";
         public static string Pcsx2UiFileName => "PCSX2_ui.ini";
         public static string Pcsx2CommandLine => Pcsx2Emulator.CommandLine;
@@ -45,7 +45,7 @@ namespace PCSX2_Configurator_Next
         }
 
         private static string _remoteConfigsDir;
-        private static string GetRemoteConfigDir()
+        private static string GetRemoteConfigsDir()
         {
             var remoteConfigDir = $"{PluginDir}\\remote";
 
@@ -97,8 +97,7 @@ namespace PCSX2_Configurator_Next
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
-                    FileName = $"{LaunchBoxDir}\\SVN\\bin\\svn.exe",
-                    WorkingDirectory = RemoteConfigsDir
+                    FileName = $"{LaunchBoxDir}\\SVN\\bin\\svn.exe"
                 }
             };
 

@@ -41,9 +41,19 @@ namespace PCSX2_Configurator_Next
             DisableControl(DownloadConfigBtn);
             _selectedGameRemoteConfigPathTask.ContinueWith(remoteConfigPath =>
             {
-                if (remoteConfigPath.Result != null)
+                if (!GameHelper.IsGameUsingRemoteConfig(_selectedGame))
                 {
-                    Dispatcher.Invoke(() => EnableControl(DownloadConfigBtn));
+                    if (remoteConfigPath.Result != null)
+                    {
+                        Dispatcher.Invoke(() => EnableControl(DownloadConfigBtn));
+                    }
+                }
+                else
+                {
+                    if (Configurator.CheckForConfigUpdates(remoteConfigPath.Result))
+                    {
+                        Dispatcher.Invoke(() => EnableControl(DownloadConfigBtn));
+                    }
                 }
             });
 
@@ -104,11 +114,21 @@ namespace PCSX2_Configurator_Next
 
         private void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: This is a Placeholder, To have multiple states
-            Mouse.OverrideCursor = Cursors.Wait;
-            var result = Configurator.DownloadConfig(_selectedGame, _selectedGameRemoteConfigPathTask.Result);
-            Mouse.OverrideCursor = null;
-            MessageBox.Show(result ? "Game Config Downloaded Successfully" : "Could Not Download Game Config");
+            if (!GameHelper.IsGameUsingRemoteConfig(_selectedGame))
+            {
+                Mouse.OverrideCursor = Cursors.Wait;
+                var result = Configurator.DownloadConfig(_selectedGame, _selectedGameRemoteConfigPathTask.Result);
+                Mouse.OverrideCursor = null;
+                MessageBox.Show(result ? "Game Config Downloaded Successfully" : "Could Not Download Game Config");
+            }
+            else
+            {
+                Mouse.OverrideCursor = Cursors.Wait;
+                Configurator.UpdateGameConfig(_selectedGame, _selectedGameRemoteConfigPathTask.Result);
+                Mouse.OverrideCursor = null;
+                MessageBox.Show("Game Config Updated Successfully.");
+            }
+
             InitializeConfigWindow();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Text;
 using IniParser;
 using IniParser.Model;
@@ -29,7 +30,7 @@ namespace PCSX2_Configurator_Next
             {
                 var downloadConfigResult = DownloadConfigFromRemote(remoteConfigPath);
 
-                if (downloadConfigResult == "Downloaded")
+                if (downloadConfigResult != "Failed")
                 {
                     var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
                     ApplyRemoteConfig(game, remoteConfigDir);
@@ -38,6 +39,22 @@ namespace PCSX2_Configurator_Next
             }
 
             return false;
+        }
+
+        public static bool CheckForConfigUpdates(string remoteConfigPath)
+        {
+            var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
+            return DoesRemoteConfigDirNeedUpdate(remoteConfigDir);
+        }
+
+        public static void UpdateGameConfig(IGame game, string remoteConfigPath)
+        {
+            var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
+
+            if (DownloadConfigFromRemote(remoteConfigPath) == "Updated")
+            {
+                ApplyRemoteConfig(game, remoteConfigDir);
+            }
         }
 
         public static void RemoveConfig(IGame game)
@@ -85,9 +102,10 @@ namespace PCSX2_Configurator_Next
         private static void DeleteConfigDir(IGame game)
         {
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
-            if (Directory.Exists(gameConfigDir))
+            if (!Directory.Exists(gameConfigDir)) return;
+            foreach (var file in new DirectoryInfo(gameConfigDir).GetFiles())
             {
-                Directory.Delete(gameConfigDir, true);
+                file.Delete();
             }
         }
 
@@ -166,12 +184,18 @@ namespace PCSX2_Configurator_Next
         private static string DownloadConfigFromRemote(string remoteConfigPath)
         {
             var svnProcess = ConfiguratorModel.SvnProcess;
+            svnProcess.StartInfo.WorkingDirectory = ConfiguratorModel.RemoteConfigsDir;
 
             svnProcess.StartInfo.Arguments = $"checkout \"{ConfiguratorModel.RemoteConfigsUrl}/{remoteConfigPath}\"";
             svnProcess.Start();
+            var svnStdOut = svnProcess.StandardOutput.ReadToEnd();
             svnProcess.WaitForExit();
 
-            return "Downloaded";
+            return 
+                svnStdOut.StartsWith("Checked out revision") ? "No Update" :
+                svnStdOut.Contains("UU   ") ? "Updated" : 
+                svnStdOut.Contains("svn: E") ? "Failed" : 
+                "Downloaded";
         }
 
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
@@ -211,6 +235,34 @@ namespace PCSX2_Configurator_Next
             }
 
             iniParser.WriteFile(targetUiConfigFilePath, targetUiConfig, Encoding.UTF8);
+        }
+
+        private static bool DoesRemoteConfigDirNeedUpdate(string remoteConfigDir)
+        {
+            var svnProcess = ConfiguratorModel.SvnProcess;
+            svnProcess.StartInfo.WorkingDirectory = remoteConfigDir;
+
+            svnProcess.StartInfo.Arguments = "info -r HEAD";
+            svnProcess.Start();
+            var svnHeadInfo = svnProcess.StandardOutput.ReadToEnd();
+            svnProcess.WaitForExit();
+
+            svnProcess.StartInfo.Arguments = "info";
+            svnProcess.Start();
+            var svnInfo = svnProcess.StandardOutput.ReadToEnd();
+            svnProcess.WaitForExit();
+
+            svnHeadInfo = GetLastChangedRev(svnHeadInfo);
+            svnInfo = GetLastChangedRev(svnInfo);
+
+            return svnHeadInfo != svnInfo;
+
+            string GetLastChangedRev(string output)
+            {
+                var arr = output.Replace("\r\n", "\n").Split('\n');
+                var ret = arr.FirstOrDefault(_ => _.StartsWith("Last Changed Rev"));
+                return ret;
+            }
         }
     }
 }

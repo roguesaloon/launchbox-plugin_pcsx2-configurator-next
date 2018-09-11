@@ -22,6 +22,7 @@ namespace PCSX2_Configurator_Next
         public static string GetRemoteConfigPath(IGame game)
         {
             var svnProcess = ConfiguratorModel.SvnProcess;
+            svnProcess.StartInfo.WorkingDirectory = ConfiguratorModel.RemoteConfigsDir;
             svnProcess.StartInfo.Arguments = $"list {ConfiguratorModel.RemoteConfigsUrl}";
 
             svnProcess.Start();
