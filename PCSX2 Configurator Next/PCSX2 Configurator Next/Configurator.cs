@@ -87,9 +87,9 @@ namespace PCSX2_Configurator_Next
 
             var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
 
-            game.CommandLine = $"{pcsx2CommandLine} {configCommandLine}";
-            game.ConfigurationPath = pcsx2AppPath;
-            game.ConfigurationCommandLine = configCommandLine;
+            game.CommandLine = string.IsNullOrEmpty(game.CommandLine) ? $"{pcsx2CommandLine} {configCommandLine}" : game.CommandLine;
+            game.ConfigurationPath = string.IsNullOrEmpty(game.ConfigurationPath) ? pcsx2AppPath : game.ConfigurationPath;
+            game.ConfigurationCommandLine = string.IsNullOrEmpty(game.ConfigurationCommandLine) ? configCommandLine : game.ConfigurationCommandLine;
         }
 
         private static void ClearGameConfigParams(IGame game)
