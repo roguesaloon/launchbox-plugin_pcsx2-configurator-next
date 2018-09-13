@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
+using PCSX2_Configurator_Next.WpfExtensions;
 using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next
@@ -27,16 +29,16 @@ namespace PCSX2_Configurator_Next
 
         private void InitializeConfigWindow()
         {
-            ConfiguredLbl.Content = "[Game Name]: [Configured]";
-            ConfiguredLbl.Content = ConfiguredLbl.Content.ToString().Replace("[Game Name]", _selectedGame.Title);
-            ConfiguredLbl.Content = GameHelper.IsGameConfigured(_selectedGame)
-                ? ConfiguredLbl.Content.ToString().Replace("[Configured]", "Configured")
-                : ConfiguredLbl.Content.ToString().Replace("[Configured]", "Not Configured");
+            ((OutlinedTextBlock) ConfiguredLbl.Content).Text = "[Game Name]: [Configured]";
+            ((OutlinedTextBlock) ConfiguredLbl.Content).Text = ((OutlinedTextBlock) ConfiguredLbl.Content).Text.Replace("[Game Name]", _selectedGame.Title);
+            ((OutlinedTextBlock) ConfiguredLbl.Content).Text = GameHelper.IsGameConfigured(_selectedGame)
+                ? ((OutlinedTextBlock) ConfiguredLbl.Content).Text.Replace("[Configured]", "Configured")
+                : ((OutlinedTextBlock) ConfiguredLbl.Content).Text.Replace("[Configured]", "Not Configured");
 
-            DownloadConfigBtn.Content = "[Download] Config";
-            DownloadConfigBtn.Content = GameHelper.IsGameUsingRemoteConfig(_selectedGame)
-                ? DownloadConfigBtn.Content.ToString().Replace("[Download]", "Update")
-                : DownloadConfigBtn.Content.ToString().Replace("[Download]", "Download");
+            ((OutlinedTextBlock) DownloadConfigBtn.Content).Text = "[Download] Config";
+            ((OutlinedTextBlock) DownloadConfigBtn.Content).Text = GameHelper.IsGameUsingRemoteConfig(_selectedGame)
+                ? ((OutlinedTextBlock) DownloadConfigBtn.Content).Text.Replace("[Download]", "Update")
+                : ((OutlinedTextBlock) DownloadConfigBtn.Content).Text.Replace("[Download]", "Download");
 
             DisableControl(DownloadConfigBtn);
             _selectedGameRemoteConfigPathTask.ContinueWith(remoteConfigPath =>
@@ -69,26 +71,33 @@ namespace PCSX2_Configurator_Next
             }
         }
 
-        private static void DisableControl(Control control)
+        private static void DisableControl(ContentControl control)
         {
             control.Cursor = null;
             control.IsEnabled = false;
-            control.Foreground = Brushes.DarkGray;
+            control.Effect = null;
+            ((OutlinedTextBlock) control.Content).Stroke = new SolidColorBrush(Color.FromRgb(0, 27, 115));
+            
         }
 
-        private static void EnableControl(Control control)
+        private static void EnableControl(ContentControl control)
         {
             control.Cursor = Cursors.Hand;
             control.IsEnabled = true;
-            control.Foreground = Brushes.Black;
+            control.Effect = new DropShadowEffect() { Direction = 220, ShadowDepth = 3, Color =  Color.FromRgb(27, 39, 220) };
+            ((OutlinedTextBlock)control.Content).Stroke = new SolidColorBrush(Color.FromRgb(3, 148, 255));
         }
 
         private void SetupEvents()
         {
-            CreateConfigBtn.MouseDown += CreateConfigBtn_Click;
-            DownloadConfigBtn.MouseDown += DownloadConfigBtn_Click;
-            RemoveConfigBtn.MouseDown += RemoveConfigBtn_Click;
-            Pcsx2Btn.MouseDown += Pcsx2Btn_Click;
+            MouseDown += delegate { try { DragMove(); } catch { /*ignored*/ } };
+
+            CreateConfigBtn.MouseLeftButtonDown += CreateConfigBtn_Click;
+            DownloadConfigBtn.MouseLeftButtonDown += DownloadConfigBtn_Click;
+            RemoveConfigBtn.MouseLeftButtonDown += RemoveConfigBtn_Click;
+            Pcsx2Btn.MouseLeftButtonDown += Pcsx2Btn_Click;
+
+            CloseBtn.MouseLeftButtonDown += delegate { Close(); };
         }
 
         private void CreateConfigBtn_Click(object sender, RoutedEventArgs e)

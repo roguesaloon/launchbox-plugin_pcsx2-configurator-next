@@ -6,21 +6,78 @@
         xmlns:wpfExtensions="clr-namespace:PCSX2_Configurator_Next.WpfExtensions"
         mc:Ignorable="d" 
         MinWidth="550" MinHeight="360" Width="550" Height="360"
-        Title="PCSX2 Configurator">
+        Title="PCSX2 Configurator" WindowStyle="None" AllowsTransparency="true">
+    <Window.Background>
+        <ImageBrush ImageSource="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/PCSX2 Configurator Window.png"/>
+    </Window.Background>
     <Grid>
-        <Label x:Name="ConfiguredLbl" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,10,10,0" HorizontalContentAlignment="Center" FontSize="16" Width="522" FontFamily="pixelFJ8pt1">
-            <!-- <wpfExtensions:OutlinedTextBlock Stroke="DeepSkyBlue" 
+
+        <StackPanel>
+            <Label x:Name="ConfiguredLbl" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,25,10,0" FontSize="22" FontFamily="pixelFJ8pt1" Width="530" Height="56" HorizontalContentAlignment="Center">
+                <Label.Effect>
+                    <DropShadowEffect ShadowDepth="3" BlurRadius="1" Color="#FF1B39AE"/>
+                </Label.Effect>
+                <wpfExtensions:OutlinedTextBlock Stroke="#19a6ff"
+                                                 Fill="White"
+                                                 ClipToBounds="True"
+                                                 StrokePosition="Outside"
+                                                 StrokeThickness="2" Text="[Game Name]: [Configured]" TextAlignment="Center" Height="46" Width="520">
+                </wpfExtensions:OutlinedTextBlock>
+            </Label>
+            <StackPanel.Effect>
+                <DropShadowEffect ShadowDepth="5" Color="#FFBBDCEA" Opacity="0.75" BlurRadius="10" Direction="0"/>
+            </StackPanel.Effect>
+        </StackPanel>
+
+        <Label x:Name="CreateConfigBtn" HorizontalAlignment="Center" Margin="185,95,181,0" VerticalAlignment="Top" Width="184" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1" FontSize="20">
+            <Label.Effect>
+                <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
+            </Label.Effect>
+            <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
+                                             Fill="#FF020727"
                                              ClipToBounds="True"
                                              StrokePosition="Outside"
-                                             StrokeThickness="1" Text="[Game Name]: [Configured]">
-            </wpfExtensions:OutlinedTextBlock> -->
-            [Game Name]: [Configured]
+                                             StrokeThickness="2" Text="Create Config" TextAlignment="Center" Width="177" Height="35">
+            </wpfExtensions:OutlinedTextBlock>
         </Label>
-        <Label x:Name="CreateConfigBtn" Content="Create Config" HorizontalAlignment="Center" Margin="160,90,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1"/>
-        <Label x:Name="DownloadConfigBtn" Content="[Download] Config" HorizontalAlignment="Center" Margin="160,130,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1"/>
-        <Label x:Name="RemoveConfigBtn" Content="Remove Config" HorizontalAlignment="Center" Margin="160,170,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1"/>
-        <Label x:Name="Pcsx2Btn" Content="Configure with PCSX2" HorizontalAlignment="Center" Margin="160,210,156,0" VerticalAlignment="Top" Width="226" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1"/>
 
+        <Label x:Name="DownloadConfigBtn" HorizontalAlignment="Center" Margin="158,140,158,0" VerticalAlignment="Top" Width="234" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1" FontSize="20">
+            <Label.Effect>
+                <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
+            </Label.Effect>
+            <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
+                                             Fill="#FF020727"
+                                             ClipToBounds="True"
+                                             StrokePosition="Outside"
+                                             StrokeThickness="2" Text="[Download] Config" TextAlignment="Center" Width="223" Height="35">
+            </wpfExtensions:OutlinedTextBlock>
+        </Label>
+
+        <Label x:Name="RemoveConfigBtn" HorizontalAlignment="Center" Margin="170,185,174,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1" FontSize="20">
+            <Label.Effect>
+                <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
+            </Label.Effect>
+            <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
+                                             Fill="#FF020727"
+                                             ClipToBounds="True"
+                                             StrokePosition="Outside"
+                                             StrokeThickness="2" Text="Remove Config" TextAlignment="Center" Width="196" Height="35">
+            </wpfExtensions:OutlinedTextBlock>
+        </Label>
+
+        <Label x:Name="Pcsx2Btn" HorizontalAlignment="Center" Margin="118,230,134,0" VerticalAlignment="Top" Width="298" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1" FontSize="20">
+            <Label.Effect>
+                <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
+            </Label.Effect>
+            <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
+                                             Fill="#FF020727"
+                                             ClipToBounds="True"
+                                             StrokePosition="Outside"
+                                             StrokeThickness="2" Text="Configure with PCSX2" TextAlignment="Center" Height="35" Width="296">
+            </wpfExtensions:OutlinedTextBlock>
+        </Label>
+
+        <Label x:Name="CloseBtn" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="535,7,0,0" Width="10" Cursor="Hand"/>
 
     </Grid>
 </Window>

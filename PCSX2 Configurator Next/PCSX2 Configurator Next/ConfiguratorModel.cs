@@ -51,7 +51,7 @@ namespace PCSX2_Configurator_Next
 
             if (!Directory.Exists(remoteConfigDir))
             {
-                Directory.CreateDirectory(remoteConfigDir);
+                Directory.CreateDirectory(remoteConfigDir).Attributes = FileAttributes.Directory | FileAttributes.Hidden;
             }
 
             return remoteConfigDir;
