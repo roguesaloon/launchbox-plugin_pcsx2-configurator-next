@@ -8,7 +8,7 @@
              MinHeight="180" MinWidth="300" Height="180" Width="300" MaxHeight="180" MaxWidth="300"
              Title="PCSX2 Configurator" WindowStyle="None" AllowsTransparency="true">
     <Window.Background>
-        <ImageBrush ImageSource="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/MsgBox_Generic.png"/>
+        <ImageBrush ImageSource="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/Generic.png"/>
     </Window.Background>
     <Grid>
 
@@ -16,32 +16,8 @@
             [Message]
         </wpfExtensions:OutlinedTextBlock>
 
-        <Canvas x:Name="CloseBtn" Margin="100,102,100,30" Cursor="Hand">
-            <Image x:Name="CloseBtnImg" Width="97" Height="45"  Canvas.Left="1" Canvas.Top="1" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/MsgBoxBtn_Blue.png"/>
-            <wpfExtensions:OutlinedTextBlock x:Name="CloseBtnTxt" Text="Close" Stroke="#19a6ff" Fill="White" Canvas.Left="10" Canvas.Top="13" TextAlignment="Center" Width="80" Height="20" FontFamily="pixelFJ8pt1">
-                <wpfExtensions:OutlinedTextBlock.Effect>
-                    <DropShadowEffect Color="#FF3CA5E8" ShadowDepth="2" BlurRadius="8" Direction="200"/>
-                </wpfExtensions:OutlinedTextBlock.Effect>
-            </wpfExtensions:OutlinedTextBlock>
-        </Canvas>
-
-        <Canvas x:Name="NoBtn" Margin="160,102,40,30" Cursor="Hand">
-            <Image Width="97" Height="45"  Canvas.Left="1" Canvas.Top="1" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/MsgBoxBtn_Blue.png"/>
-            <wpfExtensions:OutlinedTextBlock Text="No" Stroke="#19a6ff" Fill="White" Canvas.Left="10" Canvas.Top="13" TextAlignment="Center" Width="80" Height="20" FontFamily="pixelFJ8pt1">
-                <wpfExtensions:OutlinedTextBlock.Effect>
-                    <DropShadowEffect Color="#FF3CA5E8" ShadowDepth="2" BlurRadius="8" Direction="200"/>
-                </wpfExtensions:OutlinedTextBlock.Effect>
-            </wpfExtensions:OutlinedTextBlock>
-        </Canvas>
-
-        <Canvas x:Name="YesBtn" Margin="40,102,160,30" Cursor="Hand">
-            <Image Width="97" Height="45"  Canvas.Left="1" Canvas.Top="1" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/MsgBoxBtn_Blue.png"/>
-            <wpfExtensions:OutlinedTextBlock Text="Yes" Stroke="#19a6ff" Fill="White" Canvas.Left="10" Canvas.Top="13" TextAlignment="Center" Width="80" Height="20" FontFamily="pixelFJ8pt1">
-                <wpfExtensions:OutlinedTextBlock.Effect>
-                    <DropShadowEffect Color="#FF3CA5E8" ShadowDepth="2" BlurRadius="8" Direction="200"/>
-                </wpfExtensions:OutlinedTextBlock.Effect>
-            </wpfExtensions:OutlinedTextBlock>
-        </Canvas>
-
+        <Image x:Name="CloseBtn" Margin="100,102,100,30" Cursor="Hand" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/Close (Blue).png"/>
+        <Image x:Name="NoBtn" Margin="160,102,40,30" Cursor="Hand" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/No (Blue).png"/>
+        <Image x:Name="YesBtn" Margin="40,102,160,30" Cursor="Hand" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/Yes (Blue).png"/>
     </Grid>
 </Window>

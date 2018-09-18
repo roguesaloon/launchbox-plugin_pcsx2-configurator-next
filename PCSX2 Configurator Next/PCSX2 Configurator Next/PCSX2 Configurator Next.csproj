@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
       <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -85,20 +86,23 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBoxBtn_Blue.png" />
-    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBoxBtn_Red.png" />
-    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBox_Error.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBox_Generic.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBox_Success.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\PCSX2 Configurator Window.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Close %28Blue%29.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Close %28Red%29.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Config download complete.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Config removed successfully.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Config update successful.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Could not download game config.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Error.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Game successfully configured.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Generic.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\No %28Blue%29.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\No %28Red%29.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Remove config query.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Success.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Yes %28Blue%29.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Yes %28Red%29.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\PCSX2 Configurator Window.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\INIFileParser.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -106,6 +110,8 @@
 taskkill /f /im "LaunchBox.exe" /fi "status eq running"
 taskkill /f /im "BigBox.exe" /fi "status eq running"
 mkdir "$(LaunchBoxDir)\Plugins\$(ProjectName)"
-copy "$(TargetPath)" "$(LaunchBoxDir)\Plugins\$(ProjectName)\$(TargetFileName)"</PostBuildEvent>
+mkdir "$(LaunchBoxDir)\Plugins\$(ProjectName)\Assets"
+copy "$(TargetPath)" "$(LaunchBoxDir)\Plugins\$(TargetName)\$(TargetFileName)"
+xcopy "$(ProjectDir)Plugins\$(TargetName)\Assets" "$(LaunchBoxDir)\Plugins\$(TargetName)\Assets" /s /y</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -80,14 +80,15 @@ namespace PCSX2_Configurator_Next
 
         private static void SetGameConfigParams(IGame game)
         {
+            var pcsx2AppPath = ConfiguratorModel.Pcsx2RelativeAppPath;
             var pcsx2CommandLine = ConfiguratorModel.Pcsx2CommandLine;
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
 
             var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
 
             game.CommandLine = string.IsNullOrEmpty(game.CommandLine) ? $"{pcsx2CommandLine} {configCommandLine}" : game.CommandLine;
-            game.ConfigurationPath = game.ConfigurationPath;
-            game.ConfigurationCommandLine = game.ConfigurationCommandLine;
+            game.ConfigurationPath = pcsx2AppPath;
+            game.ConfigurationCommandLine = configCommandLine;
         }
 
         private static void ClearGameConfigParams(IGame game)
