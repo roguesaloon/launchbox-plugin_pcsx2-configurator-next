@@ -67,13 +67,12 @@ namespace PCSX2_Configurator_Next
         {
             if (!GameHelper.IsValidForGame(game)) return;
 
-            if (GameHelper.IsGameConfigured(game) &&
-                string.IsNullOrEmpty(game?.ConfigurationPath))
+            if (GameHelper.IsGameConfigured(game))
             {
                 SetGameConfigParams(game);
             }
 
-            if (!GameHelper.IsGameConfigured(game) && !string.IsNullOrEmpty(game?.ConfigurationPath))
+            if (!GameHelper.IsGameConfigured(game))
             {
                 ClearGameConfigParams(game);
             }
@@ -81,15 +80,14 @@ namespace PCSX2_Configurator_Next
 
         private static void SetGameConfigParams(IGame game)
         {
-            var pcsx2AppPath = ConfiguratorModel.Pcsx2RelativeAppPath;
             var pcsx2CommandLine = ConfiguratorModel.Pcsx2CommandLine;
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
 
             var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
 
             game.CommandLine = string.IsNullOrEmpty(game.CommandLine) ? $"{pcsx2CommandLine} {configCommandLine}" : game.CommandLine;
-            game.ConfigurationPath = string.IsNullOrEmpty(game.ConfigurationPath) ? pcsx2AppPath : game.ConfigurationPath;
-            game.ConfigurationCommandLine = string.IsNullOrEmpty(game.ConfigurationCommandLine) ? configCommandLine : game.ConfigurationCommandLine;
+            game.ConfigurationPath = game.ConfigurationPath;
+            game.ConfigurationCommandLine = game.ConfigurationCommandLine;
         }
 
         private static void ClearGameConfigParams(IGame game)
@@ -181,8 +179,16 @@ namespace PCSX2_Configurator_Next
             }
         }
 
+        [SuppressMessage("ReSharper", "RedundantJumpStatement")]
         private static string DownloadConfigFromRemote(string remoteConfigPath)
         {
+            var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
+            if (Directory.Exists(remoteConfigDir))
+            {
+                Directory.Delete(remoteConfigDir);
+                while (Directory.Exists(remoteConfigDir)) continue;
+            }
+
             var svnProcess = ConfiguratorModel.SvnProcess;
             svnProcess.StartInfo.WorkingDirectory = ConfiguratorModel.RemoteConfigsDir;
 

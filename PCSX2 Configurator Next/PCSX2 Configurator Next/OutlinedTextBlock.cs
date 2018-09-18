@@ -212,13 +212,18 @@ namespace PCSX2_Configurator_Next.WpfExtensions
 
             drawingContext.DrawGeometry(Fill, null, _textGeometry);
 
-            if (StrokePosition == StrokePosition.Outside)
+            switch (StrokePosition)
             {
-                drawingContext.PushClip(_clipGeometry);
-            }
-            else if (StrokePosition == StrokePosition.Inside)
-            {
-                drawingContext.PushClip(_textGeometry);
+                case StrokePosition.Outside:
+                    drawingContext.PushClip(_clipGeometry);
+                    break;
+                case StrokePosition.Inside:
+                    drawingContext.PushClip(_textGeometry);
+                    break;
+                case StrokePosition.Center:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             drawingContext.DrawGeometry(null, _pen, _textGeometry);

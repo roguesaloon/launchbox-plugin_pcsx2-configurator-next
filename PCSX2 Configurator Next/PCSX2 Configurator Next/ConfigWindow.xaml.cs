@@ -105,11 +105,10 @@ namespace PCSX2_Configurator_Next
             var createConfig = true;
             if (GameHelper.IsGameConfigured(_selectedGame))
             {
-                var message =
-                    "This game is already configured\nThis will overwrite your previous configuration\nDo you still wish to continue?";
-                var msgBox = MessageBox.Show(message, Title, MessageBoxButton.YesNo);
+                var message = "This game is already configured\nThis will overwrite your previous configuration\nDo you still wish to continue?";
+                var msgResult = MessageDialog.Show(this, MessageDialog.Type.GenericYesNo, message);
 
-                if (msgBox == MessageBoxResult.No)
+                if (msgResult != true)
                 {
                     createConfig = false;
                 }
@@ -128,14 +127,26 @@ namespace PCSX2_Configurator_Next
                 Mouse.OverrideCursor = Cursors.Wait;
                 var result = Configurator.DownloadConfig(_selectedGame, _selectedGameRemoteConfigPathTask.Result);
                 Mouse.OverrideCursor = null;
-                MessageBox.Show(result ? "Game Config Downloaded Successfully" : "Could Not Download Game Config");
+
+                if (result)
+                {
+                    var message = "Game Config Downloaded Successfully";
+                    MessageDialog.Show(this, MessageDialog.Type.Success, message);
+                }
+                else
+                {
+                    var message = "Could Not Download Game Config";
+                    MessageDialog.Show(this, MessageDialog.Type.Error, message);
+                }
             }
             else
             {
                 Mouse.OverrideCursor = Cursors.Wait;
                 Configurator.UpdateGameConfig(_selectedGame, _selectedGameRemoteConfigPathTask.Result);
                 Mouse.OverrideCursor = null;
-                MessageBox.Show("Game Config Updated Successfully.");
+
+                var message = "Game Config Updated Successfully";
+                MessageDialog.Show(this, MessageDialog.Type.Success, message);
             }
 
             InitializeConfigWindow();
@@ -145,10 +156,10 @@ namespace PCSX2_Configurator_Next
         {
             var removeConfig = true;
 
-            var message = "This will remove the current config for this game\nDo you still wish to to continue?";
-            var msgBox = MessageBox.Show(message, Title, MessageBoxButton.YesNo);
+            var message = "This will remove the current config for this game\n\nDo you wish to to continue?";
+            var msgResult = MessageDialog.Show(this, MessageDialog.Type.GenericYesNo, message, fontSize: 12);
 
-            if (msgBox == MessageBoxResult.No)
+            if (msgResult != true)
             {
                 removeConfig = false;
             }
@@ -157,7 +168,8 @@ namespace PCSX2_Configurator_Next
             Configurator.RemoveConfig(_selectedGame);
             InitializeConfigWindow();
 
-            MessageBox.Show("Config Successfully Removed", Title);
+            message = "Config Successfully Removed";
+            MessageDialog.Show(this, MessageDialog.Type.Generic, message);
         }
 
         private void Pcsx2Btn_Click(object sender, RoutedEventArgs e)

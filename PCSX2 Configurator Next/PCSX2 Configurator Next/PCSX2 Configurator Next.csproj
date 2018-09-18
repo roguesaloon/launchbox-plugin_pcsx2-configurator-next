@@ -62,6 +62,9 @@
     </Compile>
     <Compile Include="GameHelper.cs" />
     <Compile Include="GameMenuItemPlugin.cs" />
+    <Compile Include="MessageDialog.xaml.cs">
+      <DependentUpon>MessageDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OutlinedTextBlock.cs" />
     <Compile Include="SettingsModel.cs" />
     <Compile Include="SystemEventPlugin.cs" />
@@ -73,11 +76,26 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MessageDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBoxBtn_Blue.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBoxBtn_Red.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBox_Error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBox_Generic.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\MsgBox_Success.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\PCSX2 Configurator Window.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
