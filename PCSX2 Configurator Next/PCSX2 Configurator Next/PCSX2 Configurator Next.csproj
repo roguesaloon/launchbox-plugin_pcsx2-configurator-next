@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Plugins\PCSX2 Configurator Next\Assets\Mcd.7z" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Close %28Blue%29.png" />
@@ -97,6 +98,7 @@
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Generic.png" />
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\No %28Blue%29.png" />
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\No %28Red%29.png" />
+    <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Overwrite config.png" />
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Remove config query.png" />
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Success.png" />
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\Messages\Yes %28Blue%29.png" />

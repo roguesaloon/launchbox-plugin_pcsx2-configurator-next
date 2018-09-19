@@ -98,7 +98,7 @@ namespace PCSX2_Configurator_Next
                     Message.Visibility = Visibility.Hidden;
                     break;
                 case Type.ConfigOverwriteConfirm:
-                    Background = new ImageBrush(new BitmapImage());
+                    Background = new ImageBrush(new BitmapImage(new Uri("pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/Overwrite config.png")));
                     CloseBtn.Visibility = Visibility.Hidden;
                     CloseBtn.IsEnabled = false;
                     Message.Visibility = Visibility.Hidden;

@@ -105,7 +105,7 @@ namespace PCSX2_Configurator_Next
             var createConfig = true;
             if (GameHelper.IsGameConfigured(_selectedGame))
             {
-                var msgResult = MessageDialog.Show(this, MessageDialog.Type.Generic, "This will overwrite...");
+                var msgResult = MessageDialog.Show(this, MessageDialog.Type.ConfigOverwriteConfirm);
 
                 if (msgResult != true)
                 {

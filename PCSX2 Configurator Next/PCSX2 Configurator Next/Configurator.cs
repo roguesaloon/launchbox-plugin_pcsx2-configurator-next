@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -110,11 +111,8 @@ namespace PCSX2_Configurator_Next
 
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
         {
-            var baseConfigDir = ConfiguratorModel.Pcsx2InisDir;
-            var uiConfigFileName = "PCSX2_ui.ini";
-
             var iniParser = new FileIniDataParser();
-            var baseUiConfig = iniParser.ReadFile(baseConfigDir + "\\" + uiConfigFileName);
+            var baseUiConfig = iniParser.ReadFile($"{ConfiguratorModel.Pcsx2InisDir}\\{ConfiguratorModel.Pcsx2UiFileName}");
             var targetUiConfig = new IniData();
 
             if (SettingsModel.CopyLogSettings) targetUiConfig["ProgramLog"].Merge(baseUiConfig["ProgramLog"]);
@@ -124,13 +122,13 @@ namespace PCSX2_Configurator_Next
 
             if (SettingsModel.UseIndependantMemCards)
             {
-                // TODO: Extract Formatted Memory Card
-
                 var safeGameTitle = GameHelper.GetSafeGameTitle(game);
-                var memCardFilePath = $"{safeGameTitle.Replace(" ", "")}.ps2";
+                var memCardFileName = $"{safeGameTitle.Replace(" ", "")}.ps2";
 
                 targetUiConfig["MemoryCards"]["Slot1_Enable"] = "enabled";
-                targetUiConfig["MemoryCards"]["Slot1_Filename"] = Path.GetFileName(memCardFilePath);
+                targetUiConfig["MemoryCards"]["Slot1_Filename"] = memCardFileName;
+
+                ExtractFormattedMemoryCard(baseUiConfig, memCardFileName);
             }
 
             if (SettingsModel.ExposeAllConfigSettings)
@@ -147,7 +145,31 @@ namespace PCSX2_Configurator_Next
             targetUiConfig.Global["CurrentIso"] = isoPath.Replace("\\", "\\\\");
             targetUiConfig.Global["AskOnBoot"] = "disabled";
 
-            iniParser.WriteFile(targetConfigDir + "\\" + uiConfigFileName, targetUiConfig, Encoding.UTF8);
+            iniParser.WriteFile($"{targetConfigDir}\\{ConfiguratorModel.Pcsx2UiFileName}", targetUiConfig, Encoding.UTF8);
+        }
+
+        private static void ExtractFormattedMemoryCard(IniData baseUiConfig, string memCardFileName)
+        {
+            var memCardsDir = baseUiConfig["Folders"]["MemoryCards"];
+            memCardsDir = !Path.IsPathRooted(memCardsDir)
+                ? $"{ConfiguratorModel.Pcsx2AbsoluteDir}\\{memCardsDir}"
+                : memCardsDir;
+
+            if (File.Exists($"{memCardsDir}\\{memCardFileName}")) return;
+            var sevenZipProcess = new Process
+            {
+                StartInfo =
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    FileName = $"{ConfiguratorModel.LaunchBoxDir}\\7-Zip\\7z.exe",
+                    Arguments = $"e \"{ConfiguratorModel.PluginDir}\\Assets\\Mcd.7z\" -o\"{memCardsDir}\""
+                }
+            };
+
+            sevenZipProcess.Start();
+            sevenZipProcess.WaitForExit();
+            File.Move($"{memCardsDir}\\Mcd.ps2", $"{memCardsDir}\\{memCardFileName}");
         }
 
         [SuppressMessage("ReSharper", "InvertIf")]
@@ -239,6 +261,16 @@ namespace PCSX2_Configurator_Next
             {
                 var uiTweakConfig = iniParser.ReadFile(uiTweaksFilePath);
                 targetUiConfig.Merge(uiTweakConfig);
+            }
+
+            var baseUiConfig = iniParser.ReadFile($"{ConfiguratorModel.Pcsx2InisDir}\\{ConfiguratorModel.Pcsx2UiFileName}");
+            var cheatsDir = baseUiConfig["Folders"]["Cheats"];
+            cheatsDir = !Path.IsPathRooted(cheatsDir)
+                ? $"{ConfiguratorModel.Pcsx2AbsoluteDir}\\{cheatsDir}"
+                : cheatsDir;
+            foreach (var file in Directory.GetFiles(targetGameConfigDir, "*.pnach"))
+            {
+                File.Move(file, $"{cheatsDir}\\{Path.GetFileName(file)}");
             }
 
             iniParser.WriteFile(targetUiConfigFilePath, targetUiConfig, Encoding.UTF8);
