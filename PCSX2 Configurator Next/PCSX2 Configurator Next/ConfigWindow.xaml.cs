@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -35,69 +36,72 @@ namespace PCSX2_Configurator_Next
                 ? ((OutlinedTextBlock) ConfiguredLbl.Content).Text.Replace("[Configured]", "Configured")
                 : ((OutlinedTextBlock) ConfiguredLbl.Content).Text.Replace("[Configured]", "Not Configured");
 
-            ((OutlinedTextBlock) DownloadConfigBtn.Content).Text = "[Download] Config";
-            ((OutlinedTextBlock) DownloadConfigBtn.Content).Text = GameHelper.IsGameUsingRemoteConfig(_selectedGame)
-                ? ((OutlinedTextBlock) DownloadConfigBtn.Content).Text.Replace("[Download]", "Update")
-                : ((OutlinedTextBlock) DownloadConfigBtn.Content).Text.Replace("[Download]", "Download");
+            ((OutlinedTextBlock) DownloadConfigBtnLbl.Content).Text = "[Download] Config";
+            ((OutlinedTextBlock) DownloadConfigBtnLbl.Content).Text = GameHelper.IsGameUsingRemoteConfig(_selectedGame)
+                ? ((OutlinedTextBlock) DownloadConfigBtnLbl.Content).Text.Replace("[Download]", "Update")
+                : ((OutlinedTextBlock) DownloadConfigBtnLbl.Content).Text.Replace("[Download]", "Download");
 
-            DisableControl(DownloadConfigBtn);
+            DisableControl(DownloadConfigBtnLbl, DownloadConfigBtnBtn);
             _selectedGameRemoteConfigPathTask.ContinueWith(remoteConfigPath =>
             {
                 if (!GameHelper.IsGameUsingRemoteConfig(_selectedGame))
                 {
                     if (remoteConfigPath.Result != null)
                     {
-                        Dispatcher.Invoke(() => EnableControl(DownloadConfigBtn));
+                        Dispatcher.Invoke(() => EnableControl(DownloadConfigBtnLbl, DownloadConfigBtnBtn));
                     }
                 }
                 else
                 {
                     if (Configurator.CheckForConfigUpdates(remoteConfigPath.Result))
                     {
-                        Dispatcher.Invoke(() => EnableControl(DownloadConfigBtn));
+                        Dispatcher.Invoke(() => EnableControl(DownloadConfigBtnLbl, DownloadConfigBtnBtn));
                     }
                 }
             });
 
             if (!GameHelper.IsGameConfigured(_selectedGame))
             {
-                DisableControl(RemoveConfigBtn);
-                DisableControl(Pcsx2Btn);
+                DisableControl(RemoveConfigBtnLbl, RemoveConfigBtnBtn);
+                DisableControl(ConfigureWithPcsx2BtnLbl, ConfigureWithPcsx2BtnBtn);
             }
             else
             {
-                EnableControl(RemoveConfigBtn);
-                EnableControl(Pcsx2Btn);
+                EnableControl(RemoveConfigBtnLbl, RemoveConfigBtnBtn);
+                EnableControl(ConfigureWithPcsx2BtnLbl, ConfigureWithPcsx2BtnBtn);
             }
         }
 
-        private static void DisableControl(ContentControl control)
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+        private static void DisableControl(Label label, Button button)
         {
-            control.Cursor = null;
-            control.IsEnabled = false;
-            control.Effect = null;
-            ((OutlinedTextBlock) control.Content).Stroke = new SolidColorBrush(Color.FromRgb(0, 27, 115));
-            
+            button.Cursor = null;
+            button.IsEnabled = false;
+
+            label.Effect = null;
+            ((OutlinedTextBlock) label.Content).Stroke = new SolidColorBrush(Color.FromRgb(0, 27, 115));
         }
 
-        private static void EnableControl(ContentControl control)
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+        private static void EnableControl(Label label, Button button)
         {
-            control.Cursor = Cursors.Hand;
-            control.IsEnabled = true;
-            control.Effect = new DropShadowEffect() { Direction = 220, ShadowDepth = 3, Color =  Color.FromRgb(27, 39, 220) };
-            ((OutlinedTextBlock)control.Content).Stroke = new SolidColorBrush(Color.FromRgb(3, 148, 255));
+            button.Cursor = Cursors.Hand;
+            button.IsEnabled = true;
+
+            label.Effect = new DropShadowEffect() { Direction = 220, ShadowDepth = 3, Color =  Color.FromRgb(27, 39, 220) };
+            ((OutlinedTextBlock)label.Content).Stroke = new SolidColorBrush(Color.FromRgb(3, 148, 255));
         }
 
         private void SetupEvents()
         {
             MouseDown += delegate { try { DragMove(); } catch { /*ignored*/ } };
 
-            CreateConfigBtn.MouseLeftButtonDown += CreateConfigBtn_Click;
-            DownloadConfigBtn.MouseLeftButtonDown += DownloadConfigBtn_Click;
-            RemoveConfigBtn.MouseLeftButtonDown += RemoveConfigBtn_Click;
-            Pcsx2Btn.MouseLeftButtonDown += Pcsx2Btn_Click;
+            CreateConfigBtnBtn.Click += CreateConfigBtn_Click;
+            DownloadConfigBtnBtn.Click += DownloadConfigBtn_Click;
+            RemoveConfigBtnBtn.Click += RemoveConfigBtn_Click;
+            ConfigureWithPcsx2BtnBtn.Click += Pcsx2Btn_Click;
 
-            CloseBtn.MouseLeftButtonDown += delegate { Close(); };
+            CloseBtn.Click += delegate { Close(); };
         }
 
         private void CreateConfigBtn_Click(object sender, RoutedEventArgs e)

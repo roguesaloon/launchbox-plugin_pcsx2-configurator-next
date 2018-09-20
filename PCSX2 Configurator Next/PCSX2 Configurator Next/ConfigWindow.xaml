@@ -29,55 +29,67 @@
             </StackPanel.Effect>
         </StackPanel>
 
-        <Label x:Name="CreateConfigBtn" HorizontalAlignment="Center" Margin="185,95,181,0" VerticalAlignment="Top" Width="184" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
-            <Label.Effect>
-                <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
-            </Label.Effect>
-            <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
-                                             Fill="#FF020727"
-                                             ClipToBounds="True"
-                                             StrokePosition="Outside"
-                                             StrokeThickness="2" Text="Create Config" TextAlignment="Center" Width="177" Height="35">
-            </wpfExtensions:OutlinedTextBlock>
-        </Label>
+        <Grid x:Name="CreateConfigBtnGrd" Margin="185,95,181,220">
+            <Label x:Name="CreateConfigBtnLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
+                <Label.Effect>
+                    <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
+                </Label.Effect>
+                <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
+                                                 Fill="#FF020727"
+                                                 ClipToBounds="True"
+                                                 StrokePosition="Outside"
+                                                 StrokeThickness="2" Text="Create Config" TextAlignment="Center" Width="176" Height="35">
+                </wpfExtensions:OutlinedTextBlock>
+            </Label>
+            <Button x:Name="CreateConfigBtnBtn" Cursor="Hand"  Margin="0,0,0,6" Opacity="0" />
+        </Grid>
 
-        <Label x:Name="DownloadConfigBtn" HorizontalAlignment="Center" Margin="158,140,158,0" VerticalAlignment="Top" Width="234" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
-            <Label.Effect>
-                <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
-            </Label.Effect>
-            <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
-                                             Fill="#FF020727"
-                                             ClipToBounds="True"
-                                             StrokePosition="Outside"
-                                             StrokeThickness="2" Text="[Download] Config" TextAlignment="Center" Width="223" Height="35">
-            </wpfExtensions:OutlinedTextBlock>
-        </Label>
+        <Grid x:Name="DownloadConfigBtnGrd" Margin="158,140,158,175">
+            <Label x:Name="DownloadConfigBtnLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
+                <Label.Effect>
+                    <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
+                </Label.Effect>
+                <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
+                                                 Fill="#FF020727"
+                                                 ClipToBounds="True"
+                                                 StrokePosition="Outside"
+                                                 StrokeThickness="2" Text="[Download] Config" TextAlignment="Center" Width="225" Height="35">
+                </wpfExtensions:OutlinedTextBlock>
+            </Label>
+            <Button x:Name="DownloadConfigBtnBtn" Cursor="Hand"  Margin="0,0,0,6" Opacity="0" />
+        </Grid>
 
-        <Label x:Name="RemoveConfigBtn" HorizontalAlignment="Center" Margin="170,185,174,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
-            <Label.Effect>
-                <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
-            </Label.Effect>
-            <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
-                                             Fill="#FF020727"
-                                             ClipToBounds="True"
-                                             StrokePosition="Outside"
-                                             StrokeThickness="2" Text="Remove Config" TextAlignment="Center" Width="196" Height="35">
-            </wpfExtensions:OutlinedTextBlock>
-        </Label>
+        <Grid x:Name="RemoveConfigBtnGrd" Margin="170,185,174,130">
+            <Label x:Name="RemoveConfigBtnLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
+                <Label.Effect>
+                    <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
+                </Label.Effect>
+                <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
+                                                 Fill="#FF020727"
+                                                 ClipToBounds="True"
+                                                 StrokePosition="Outside"
+                                                 StrokeThickness="2" Text="Remove Config" TextAlignment="Center" Width="195" Height="35">
+                </wpfExtensions:OutlinedTextBlock>
+            </Label>
+            <Button x:Name="RemoveConfigBtnBtn" Cursor="Hand"  Margin="0,0,0,6" Opacity="0" />
+        </Grid>
 
-        <Label x:Name="Pcsx2Btn" HorizontalAlignment="Center" Margin="118,230,134,0" VerticalAlignment="Top" Width="298" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
-            <Label.Effect>
-                <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
-            </Label.Effect>
-            <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
-                                             Fill="#FF020727"
-                                             ClipToBounds="True"
-                                             StrokePosition="Outside"
-                                             StrokeThickness="2" Text="Configure with PCSX2" TextAlignment="Center" Height="35" Width="296">
-            </wpfExtensions:OutlinedTextBlock>
-        </Label>
+        <Grid x:Name="ConfigureWithPcsx2BtnGrd" Margin="118,230,134,85">
+            <Label x:Name="ConfigureWithPcsx2BtnLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
+                <Label.Effect>
+                    <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
+                </Label.Effect>
+                <wpfExtensions:OutlinedTextBlock Stroke="#0394ff"
+                                                 Fill="#FF020727"
+                                                 ClipToBounds="True"
+                                                 StrokePosition="Outside"
+                                                 StrokeThickness="2" Text="Configure with PCSX2" TextAlignment="Center" Width="290" Height="35">
+                </wpfExtensions:OutlinedTextBlock>
+            </Label>
+            <Button x:Name="ConfigureWithPcsx2BtnBtn" Cursor="Hand"  Margin="0,0,0,6" Opacity="0" />
+        </Grid>
 
-        <Label x:Name="CloseBtn" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="535,7,0,0" Width="10" Cursor="Hand"/>
+        <Button x:Name="CloseBtn" Cursor="Hand" Margin="535,7,5,343" Opacity="0" />
 
     </Grid>
 </Window>

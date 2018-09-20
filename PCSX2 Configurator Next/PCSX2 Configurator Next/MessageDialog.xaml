@@ -16,8 +16,20 @@
             [Message]
         </wpfExtensions:OutlinedTextBlock>
 
-        <Image x:Name="CloseBtn" Margin="100,102,100,30" Cursor="Hand" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/Close (Blue).png"/>
-        <Image x:Name="NoBtn" Margin="160,102,40,30" Cursor="Hand" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/No (Blue).png"/>
-        <Image x:Name="YesBtn" Margin="40,102,160,30" Cursor="Hand" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/Yes (Blue).png"/>
+        <Grid x:Name="CloseBtnGrd" Margin="100,102,100,30">
+            <Image x:Name="CloseBtnImg" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/Close (Blue).png"/>
+            <Button x:Name="CloseBtnBtn" Cursor="Hand" Margin="2,4" Opacity="0" />
+        </Grid>
+
+        <Grid x:Name="NoBtnGrd" Margin="160,102,40,30">
+            <Image x:Name="NoBtnImg" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/No (Blue).png"/>
+            <Button x:Name="NoBtnBtn" Cursor="Hand" Margin="2,4" Opacity="0"/>
+        </Grid>
+
+        <Grid x:Name="YesBtnGrd" Margin="40,102,160,30" >
+            <Image x:Name="YesBtnImg" Source="pack://siteoforigin:,,,/Plugins/PCSX2 Configurator Next/Assets/Images/Messages/Yes (Blue).png"/>
+            <Button x:Name="YesBtnBtn" Cursor="Hand" Margin="2,4" Opacity="0"/>
+        </Grid>
+
     </Grid>
 </Window>
