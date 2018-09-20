@@ -12,7 +12,7 @@
     </Window.Background>
     <Grid>
 
-        <wpfExtensions:OutlinedTextBlock x:Name="Message" Margin="10,10,10,83" Fill="White" Stroke="#19a6ff" FontFamily="pixelFJ8pt1" TextAlignment="Center" TextWrapping="Wrap" FontSize="14">
+        <wpfExtensions:OutlinedTextBlock x:Name="Message" Margin="10,10,10,83" Fill="White" Stroke="#19a6ff" FontFamily="./fonts/#pixelFJ8pt1" TextAlignment="Center" TextWrapping="Wrap" FontSize="14">
             [Message]
         </wpfExtensions:OutlinedTextBlock>
 

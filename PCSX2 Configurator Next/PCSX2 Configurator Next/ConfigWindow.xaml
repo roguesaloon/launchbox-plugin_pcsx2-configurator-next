@@ -13,7 +13,7 @@
     <Grid>
 
         <StackPanel>
-            <Label x:Name="ConfiguredLbl" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,25,10,0" FontSize="22" FontFamily="pixelFJ8pt1" Width="530" Height="56" HorizontalContentAlignment="Center">
+            <Label x:Name="ConfiguredLbl" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,25,10,0" FontSize="22" FontFamily="./fonts/#pixelFJ8pt1" Width="530" Height="56" HorizontalContentAlignment="Center">
                 <Label.Effect>
                     <DropShadowEffect ShadowDepth="3" BlurRadius="1" Color="#FF1B39AE"/>
                 </Label.Effect>
@@ -29,7 +29,7 @@
             </StackPanel.Effect>
         </StackPanel>
 
-        <Label x:Name="CreateConfigBtn" HorizontalAlignment="Center" Margin="185,95,181,0" VerticalAlignment="Top" Width="184" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1" FontSize="20">
+        <Label x:Name="CreateConfigBtn" HorizontalAlignment="Center" Margin="185,95,181,0" VerticalAlignment="Top" Width="184" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
             <Label.Effect>
                 <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
             </Label.Effect>
@@ -41,7 +41,7 @@
             </wpfExtensions:OutlinedTextBlock>
         </Label>
 
-        <Label x:Name="DownloadConfigBtn" HorizontalAlignment="Center" Margin="158,140,158,0" VerticalAlignment="Top" Width="234" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1" FontSize="20">
+        <Label x:Name="DownloadConfigBtn" HorizontalAlignment="Center" Margin="158,140,158,0" VerticalAlignment="Top" Width="234" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
             <Label.Effect>
                 <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
             </Label.Effect>
@@ -53,7 +53,7 @@
             </wpfExtensions:OutlinedTextBlock>
         </Label>
 
-        <Label x:Name="RemoveConfigBtn" HorizontalAlignment="Center" Margin="170,185,174,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1" FontSize="20">
+        <Label x:Name="RemoveConfigBtn" HorizontalAlignment="Center" Margin="170,185,174,0" VerticalAlignment="Top" Width="206" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
             <Label.Effect>
                 <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
             </Label.Effect>
@@ -65,7 +65,7 @@
             </wpfExtensions:OutlinedTextBlock>
         </Label>
 
-        <Label x:Name="Pcsx2Btn" HorizontalAlignment="Center" Margin="118,230,134,0" VerticalAlignment="Top" Width="298" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="pixelFJ8pt1" FontSize="20">
+        <Label x:Name="Pcsx2Btn" HorizontalAlignment="Center" Margin="118,230,134,0" VerticalAlignment="Top" Width="298" HorizontalContentAlignment="Center" Cursor="Hand" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
             <Label.Effect>
                 <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
             </Label.Effect>

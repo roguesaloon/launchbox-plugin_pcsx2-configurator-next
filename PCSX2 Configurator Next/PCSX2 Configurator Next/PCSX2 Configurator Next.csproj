@@ -83,6 +83,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="fonts\pixelFJ8pt1__.TTF" />
     <None Include="packages.config" />
     <None Include="Plugins\PCSX2 Configurator Next\Assets\Mcd.7z" />
   </ItemGroup>
@@ -106,6 +107,7 @@
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\Images\PCSX2 Configurator Window.png" />
     <Content Include="Plugins\PCSX2 Configurator Next\Assets\INIFileParser.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>taskkill /f /im "LaunchBox.Next.exe" /fi "status eq running"
