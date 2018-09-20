@@ -102,11 +102,7 @@ namespace PCSX2_Configurator_Next
         private static void DeleteConfigDir(IGame game)
         {
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
-            if (!Directory.Exists(gameConfigDir)) return;
-            foreach (var file in new DirectoryInfo(gameConfigDir).GetFiles())
-            {
-                file.Delete();
-            }
+            SystemDeleteDir(gameConfigDir);
         }
 
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
@@ -202,15 +198,10 @@ namespace PCSX2_Configurator_Next
             }
         }
 
-        [SuppressMessage("ReSharper", "RedundantJumpStatement")]
         private static string DownloadConfigFromRemote(string remoteConfigPath)
         {
             var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
-            if (Directory.Exists(remoteConfigDir))
-            {
-                Directory.Delete(remoteConfigDir);
-                while (Directory.Exists(remoteConfigDir)) continue;
-            }
+            SystemDeleteDir(remoteConfigDir);
 
             var svnProcess = ConfiguratorModel.SvnProcess;
             svnProcess.StartInfo.WorkingDirectory = ConfiguratorModel.RemoteConfigsDir;
@@ -302,6 +293,24 @@ namespace PCSX2_Configurator_Next
                 var ret = arr.FirstOrDefault(_ => _.StartsWith("Last Changed Rev"));
                 return ret;
             }
+        }
+
+        private static void SystemDeleteDir(string dir)
+        {
+            if (!Directory.Exists(dir)) return;
+            var deleteDirProcess = new Process
+            {
+                StartInfo =
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    FileName = "cmd.exe",
+                    Arguments = $"/c rmdir /s /q \"{dir}\""
+                }
+            };
+
+            deleteDirProcess.Start();
+            deleteDirProcess.WaitForExit();
         }
     }
 }
