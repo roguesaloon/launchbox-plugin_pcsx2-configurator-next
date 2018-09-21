@@ -3,8 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using IniParser;
 using IniParser.Model;
+using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next
@@ -87,7 +89,32 @@ namespace PCSX2_Configurator_Next
 
             var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
 
-            game.CommandLine = string.IsNullOrEmpty(game.CommandLine) ? $"{pcsx2CommandLine} {configCommandLine}" : game.CommandLine;
+            if (!GameHelper.IsGameUsingRocketLauncher(game))
+            {
+                game.CommandLine = string.IsNullOrEmpty(game.CommandLine)
+                    ? $"{pcsx2CommandLine} {configCommandLine}"
+                    : game.CommandLine;
+            }
+            else
+            {
+                Task.Run(() =>
+                {
+                    var rocketLauncherPath = PluginHelper.DataManager.GetEmulatorById(game.EmulatorId).ApplicationPath;
+                    var rocketLauncherDir = Path.GetDirectoryName(!Path.IsPathRooted(rocketLauncherPath)
+                        ? $"{ConfiguratorModel.LaunchBoxDir}\\{rocketLauncherPath}"
+                        : rocketLauncherPath);
+
+                    var iniParser = new FileIniDataParser();
+                    var rocketLauncherPcsx2ConfigPath = $"{rocketLauncherDir}\\Modules\\PCSX2\\PCSX2.ini";
+                    var rocketLauncherPcsx2Config = File.Exists(rocketLauncherPcsx2ConfigPath) ? iniParser.ReadFile(rocketLauncherPcsx2ConfigPath) : new IniData();
+
+                    rocketLauncherPcsx2Config["Settings"]["cfgpath"] = SettingsModel.GameConfigsDir;
+
+                    iniParser.WriteFile(rocketLauncherPcsx2ConfigPath, rocketLauncherPcsx2Config, Encoding.UTF8);
+                });
+
+            }
+
             game.ConfigurationPath = pcsx2AppPath;
             game.ConfigurationCommandLine = configCommandLine;
         }

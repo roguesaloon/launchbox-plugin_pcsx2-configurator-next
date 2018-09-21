@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next
@@ -14,8 +16,8 @@ namespace PCSX2_Configurator_Next
 
         public static string GetGameConfigDir(IGame game)
         {
-            var safeGameTitle = GetSafeGameTitle(game);
-            var gameConfigDir = $"{SettingsModel.GameConfigsDir}\\{safeGameTitle}";
+            var gameConfigDirName = !IsGameUsingRocketLauncher(game) ? GetSafeGameTitle(game) : Path.GetFileNameWithoutExtension(game.ApplicationPath);
+            var gameConfigDir = $"{SettingsModel.GameConfigsDir}\\{gameConfigDirName}";
             return gameConfigDir;
         }
 
@@ -57,6 +59,13 @@ namespace PCSX2_Configurator_Next
             var remoteFile = $"{gameConfigDir}\\{ConfiguratorModel.RemoteConfigDummyFileName}";
 
             return File.Exists(remoteFile);
+        }
+
+        public static bool IsGameUsingRocketLauncher(IGame game)
+        {
+            var emulator = PluginHelper.DataManager.GetEmulatorById(game.EmulatorId);
+            var ret = Regex.IsMatch(emulator.Title, "rocket.*launcher", RegexOptions.IgnoreCase);
+            return ret;
         }
     }
 }
