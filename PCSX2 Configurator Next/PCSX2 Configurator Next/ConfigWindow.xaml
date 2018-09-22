@@ -91,8 +91,8 @@
 
         <Button x:Name="CloseBtn" Cursor="Hand" Margin="535,7,5,343" Opacity="0" />
 
-        <Label x:Name="VersionLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="8" HorizontalContentAlignment="Center" Margin="440,330,40,0" Height="20" VerticalAlignment="Top" Foreground="White">
-            Beta 1 RC1
+        <Label x:Name="VersionLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="8" HorizontalContentAlignment="Center" Margin="440,330,40,0" Height="20" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.667,0.967">
+            Beta 1
         </Label>
 
     </Grid>
