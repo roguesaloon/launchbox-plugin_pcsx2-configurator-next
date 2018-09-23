@@ -41,7 +41,7 @@ namespace PCSX2_Configurator_Next
         public static bool IsValidForGame(IGame game)
         {
             // TODO: Expand This
-            return game.Platform == "Sony Playstation 2";
+            return game.Platform.ToLower() == "sony playstation 2";
         }
 
         public static bool IsGameConfigured(IGame game)
