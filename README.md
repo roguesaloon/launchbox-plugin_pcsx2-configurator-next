@@ -3,7 +3,7 @@ PCSX2 Configuartor Next is a plugin for LaunchBox that allows users to easily co
 # Installation
 The plugin is easy to install and simply needs to be downloaded and extracted. The archive contains a folder called "PCSX2 Configurator Next", this should be placed in the root of the "Plugins" in the user's LaunchBox directory. Any previous versions of the plugin should be removed before attempting to install this version.
 # General Usage
-The plugin is relatively straight forward to use, but has been changed significantly from previous versions. You will first need to have PCSX2 setup as an emulator in LaunchBox. Then right click on a PS2 Game and choose "PCSX2 Configurator" from near the bottom of the context menu. This will present a menu of options:
+The plugin is relatively straight forward to use, but has been changed significantly from previous versions. You will first need to have PCSX2 ([1.5.0 development build](https://buildbot.orphis.net/pcsx2/index.php)) setup as an emulator in LaunchBox. Then right click on a PS2 Game and choose "PCSX2 Configurator" from near the bottom of the context menu. This will present a menu of options:
 
 **"Create Config"** - Creates a new config for the game in question based on the users current PCSX2 settings, If a config already exists this will overwrite that config with a new one.
 
