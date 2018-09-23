@@ -77,7 +77,7 @@ namespace PCSX2_Configurator_Next
         {
             var pcsx2InisDir = File.Exists($"{Pcsx2AbsoluteDir}\\portable.ini")
                 ? $"{Pcsx2AbsoluteDir}\\inis"
-                : Registry.GetValue("HKCU\\Software\\PCSX2", "SettingsFolder", null).ToString();
+                : Registry.GetValue("HKEY_CURRENT_USER\\Software\\PCSX2", "SettingsFolder", null).ToString();
 
             if (string.IsNullOrEmpty(pcsx2InisDir))
             {
