@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using Microsoft.Win32;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
@@ -64,9 +65,9 @@ namespace PCSX2_Configurator_Next
         private static string GetPcsx2AppPath(bool absolutePath)
         {
             var appPath = Pcsx2Emulator.ApplicationPath;
-            var absolutAppPath = $"{LaunchBoxDir}\\{appPath}";
+            var absolutAppPath = !Path.IsPathRooted(appPath) ? $"{LaunchBoxDir}\\{appPath}" : appPath;
 
-            appPath = (!Path.IsPathRooted(appPath) && absolutePath) ? absolutAppPath : appPath;
+            appPath = absolutePath ? absolutAppPath : appPath;
 
             return File.Exists(absolutAppPath) ? appPath : null;
         }

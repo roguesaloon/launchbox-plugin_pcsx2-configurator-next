@@ -92,7 +92,7 @@
         <Button x:Name="CloseBtn" Cursor="Hand" Margin="535,7,5,343" Opacity="0" />
 
         <Label x:Name="VersionLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="8" HorizontalContentAlignment="Center" Margin="420,330,40,0" Height="20" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.667,0.967">
-            Beta 1 Hotfix 1
+            Beta 1 Hotfix 2
         </Label>
 
     </Grid>
