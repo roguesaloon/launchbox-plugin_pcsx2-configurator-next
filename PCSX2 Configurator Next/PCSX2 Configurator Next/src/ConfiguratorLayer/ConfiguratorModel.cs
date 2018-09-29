@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
 using Microsoft.Win32;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
