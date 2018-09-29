@@ -1,9 +1,11 @@
 ﻿using System.Drawing;
 using System.Windows;
+using PCSX2_Configurator_Next.ConfiguratorLayer;
+using PCSX2_Configurator_Next.UiLayer;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
-namespace PCSX2_Configurator_Next
+namespace PCSX2_Configurator_Next.PluginLayer
 {
     internal class GameMenuItemPlugin : IGameMenuItemPlugin
     {

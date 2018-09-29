@@ -3,7 +3,7 @@ using System.Text;
 using IniParser;
 using IniParser.Model;
 
-namespace PCSX2_Configurator_Next
+namespace PCSX2_Configurator_Next.ConfiguratorLayer
 {
     public static class SettingsModel
     {

@@ -9,7 +9,7 @@ using IniParser.Model;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
-namespace PCSX2_Configurator_Next
+namespace PCSX2_Configurator_Next.ConfiguratorLayer
 {
     public static class Configurator
     {

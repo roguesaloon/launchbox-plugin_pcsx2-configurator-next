@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace PCSX2_Configurator_Next
+namespace PCSX2_Configurator_Next.UiLayer
 {
     /// <inheritdoc cref="Window" />
     /// <summary>

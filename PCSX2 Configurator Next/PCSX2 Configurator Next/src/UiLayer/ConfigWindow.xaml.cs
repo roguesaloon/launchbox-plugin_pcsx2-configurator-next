@@ -5,10 +5,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using PCSX2_Configurator_Next.WpfExtensions;
+using PCSX2_Configurator_Next.ConfiguratorLayer;
+using PCSX2_Configurator_Next.UiLayer.WpfExtensions;
 using Unbroken.LaunchBox.Plugins.Data;
 
-namespace PCSX2_Configurator_Next
+namespace PCSX2_Configurator_Next.UiLayer
 {
     /// <inheritdoc cref="Window" />
     /// <summary>
