@@ -43,7 +43,7 @@ namespace PCSX2_Configurator_Next.Plugins
 
         private static void DownloadSvn()
         {
-            var svnDir = $"{Configurator.Model.LaunchBoxDir}\\SVN";
+            var svnDir = Configurator.Model.SvnDir;
             var svnZip = $"{Configurator.Model.LaunchBoxDir}\\SVN.zip";
 
             if (Directory.Exists(svnDir)) return;

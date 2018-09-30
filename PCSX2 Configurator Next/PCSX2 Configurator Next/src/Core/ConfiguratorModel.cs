@@ -17,6 +17,7 @@ namespace PCSX2_Configurator_Next.Core
         public string RemoteConfigsDir => _remoteConfigsDir ?? (_remoteConfigsDir = GetRemoteConfigsDir());
         public string RemoteConfigDummyFileName => "remote";
         public string Pcsx2UiFileName => "PCSX2_ui.ini";
+        public string SvnDir => $"{LaunchBoxDir}\\SVN";
         public string Pcsx2CommandLine => Pcsx2Emulator.CommandLine;
         public string Pcsx2RelativeAppPath => _pcsx2RelativeAppPath ?? (_pcsx2RelativeAppPath = GetPcsx2AppPath(absolutePath: false));
         public string Pcsx2AbsoluteAppPath => _pcsx2AbsoluteAppPath ?? (_pcsx2AbsoluteAppPath = GetPcsx2AppPath(absolutePath: true));

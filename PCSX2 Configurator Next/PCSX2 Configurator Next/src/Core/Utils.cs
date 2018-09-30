@@ -86,7 +86,7 @@ namespace PCSX2_Configurator_Next.Core
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
-                    FileName = $"{Configurator.Model.LaunchBoxDir}\\SVN\\bin\\svn.exe",
+                    FileName = $"{Configurator.Model.SvnDir}\\bin\\svn.exe",
                     Arguments = arguments,
                     WorkingDirectory = workingDir
                 }
