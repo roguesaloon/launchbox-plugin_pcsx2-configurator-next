@@ -56,7 +56,7 @@ namespace PCSX2_Configurator_Next.Core
             var info = SvnRun("info", svnDir);
 
             bool WithLastChagedRev(string str) => str.StartsWith("Last Changed Rev");
-            return SvnLine(headInfo, WithLastChagedRev) != SvnLine(info, WithLastChagedRev);
+            return SvnOutputLine(headInfo, WithLastChagedRev) != SvnOutputLine(info, WithLastChagedRev);
         }
 
         public static string SvnFindPathInRemote(string remotePath, Func<string, bool> withCondition)
@@ -64,13 +64,13 @@ namespace PCSX2_Configurator_Next.Core
             var arguments = $"list {remotePath}";
             var output = SvnRun(arguments);
 
-            var path = SvnLine(output, withCondition);
+            var path = SvnOutputLine(output, withCondition);
             path = path?.Substring(0, path.Length - 1);
 
             return path;
         }
 
-        private static string SvnLine(string svnOutput, Func<string, bool> withCondition)
+        private static string SvnOutputLine(string svnOutput, Func<string, bool> withCondition)
         {
             var arr = svnOutput.Replace("\r\n", "\n").Split('\n');
             var ret = arr.FirstOrDefault(withCondition);
