@@ -67,7 +67,7 @@
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="src\UiLayer\WpfExtensions\OutlinedTextBlock.cs" />
-    <Compile Include="src\ConfiguratorLayer\SettingsModel.cs" />
+    <Compile Include="src\ConfiguratorLayer\Settings.cs" />
     <Compile Include="src\PluginLayer\SystemEventPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\PluginLayer\SystemMenuItemPlugin.cs" />

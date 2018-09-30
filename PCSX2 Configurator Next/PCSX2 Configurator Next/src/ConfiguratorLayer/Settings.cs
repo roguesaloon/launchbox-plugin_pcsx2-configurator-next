@@ -1,15 +1,22 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text;
 using IniParser;
 using IniParser.Model;
 
 namespace PCSX2_Configurator_Next.ConfiguratorLayer
 {
-    public static class SettingsModel
+    public class Settings
     {
-        public static void Init()
+        public static SettingsModel Model { get; } = new SettingsModel();
+    }
+
+    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
+    public class SettingsModel
+    {
+        public void Init()
         {
-            var settingsFilePath = $"{ConfiguratorModel.PluginDir}\\Settings.ini";
+            var settingsFilePath = $"{Configurator.Model.PluginDir}\\Settings.ini";
             var settings = typeof(SettingsModel).GetProperties();
             var iniParser = new FileIniDataParser();
 
@@ -58,16 +65,16 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
             }
         }
 
-        public static string GameConfigsDir { get; internal set; } = ConfiguratorModel.Pcsx2InisDir;
-        public static bool CopyLogSettings { get; internal set; } = true;
-        public static bool CopyFolderSettings { get; internal set; } = false;
-        public static bool CopyFileSettings { get; internal set; } = true;
-        public static bool CopyWindowSettings { get; internal set; } = true;
-        public static bool UseIndependantMemCards { get; internal set; } = true;
-        public static bool ExposeAllConfigSettings { get; internal set; } = false;
-        public static bool CopyVmSettingsFile { get; internal set; } = true;
-        public static bool CopyGsdxSettingsFile { get; internal set; } = true;
-        public static bool CopySpu2XSettingsFile { get; internal set; } = false;
-        public static bool CopyLilyPadSettingsFile { get; internal set; } = false;
+        public string GameConfigsDir { get; private set; } = Configurator.Model.Pcsx2InisDir;
+        public bool CopyLogSettings { get; private set; } = true;
+        public bool CopyFolderSettings { get; private set; } = false;
+        public bool CopyFileSettings { get; private set; } = true;
+        public bool CopyWindowSettings { get; private set; } = true;
+        public bool UseIndependantMemCards { get; private set; } = true;
+        public bool ExposeAllConfigSettings { get; private set; } = false;
+        public bool CopyVmSettingsFile { get; private set; } = true;
+        public bool CopyGsdxSettingsFile { get; private set; } = true;
+        public bool CopySpu2XSettingsFile { get; private set; } = false;
+        public bool CopyLilyPadSettingsFile { get; private set; } = false;
     }
 }

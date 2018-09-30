@@ -13,6 +13,8 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
 {
     public static class Configurator
     {
+        public static ConfiguratorModel Model { get; } = new ConfiguratorModel();
+
         public static void CreateConfig(IGame game)
         {
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
@@ -35,7 +37,7 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
 
                 if (downloadConfigResult != "Failed")
                 {
-                    var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
+                    var remoteConfigDir = $"{Model.RemoteConfigsDir}\\{remoteConfigPath}";
                     ApplyRemoteConfig(game, remoteConfigDir);
                     return true;
                 }
@@ -46,13 +48,13 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
 
         public static bool CheckForConfigUpdates(string remoteConfigPath)
         {
-            var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
+            var remoteConfigDir = $"{Model.RemoteConfigsDir}\\{remoteConfigPath}";
             return DoesRemoteConfigDirNeedUpdate(remoteConfigDir);
         }
 
         public static void UpdateGameConfig(IGame game, string remoteConfigPath)
         {
-            var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
+            var remoteConfigDir = $"{Model.RemoteConfigsDir}\\{remoteConfigPath}";
 
             if (DownloadConfigFromRemote(remoteConfigPath) == "Updated")
             {
@@ -83,8 +85,8 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
 
         private static void SetGameConfigParams(IGame game)
         {
-            var pcsx2AppPath = ConfiguratorModel.Pcsx2RelativeAppPath;
-            var pcsx2CommandLine = ConfiguratorModel.Pcsx2CommandLine;
+            var pcsx2AppPath = Model.Pcsx2RelativeAppPath;
+            var pcsx2CommandLine = Model.Pcsx2CommandLine;
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
 
             var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
@@ -101,14 +103,14 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
                 {
                     var rocketLauncherPath = PluginHelper.DataManager.GetEmulatorById(game.EmulatorId).ApplicationPath;
                     var rocketLauncherDir = Path.GetDirectoryName(!Path.IsPathRooted(rocketLauncherPath)
-                        ? $"{ConfiguratorModel.LaunchBoxDir}\\{rocketLauncherPath}"
+                        ? $"{Model.LaunchBoxDir}\\{rocketLauncherPath}"
                         : rocketLauncherPath);
 
                     var iniParser = new FileIniDataParser();
                     var rocketLauncherPcsx2ConfigPath = $"{rocketLauncherDir}\\Modules\\PCSX2\\PCSX2.ini";
                     var rocketLauncherPcsx2Config = File.Exists(rocketLauncherPcsx2ConfigPath) ? iniParser.ReadFile(rocketLauncherPcsx2ConfigPath) : new IniData();
 
-                    rocketLauncherPcsx2Config["Settings"]["cfgpath"] = SettingsModel.GameConfigsDir;
+                    rocketLauncherPcsx2Config["Settings"]["cfgpath"] = Settings.Model.GameConfigsDir;
 
                     iniParser.WriteFile(rocketLauncherPcsx2ConfigPath, rocketLauncherPcsx2Config, Encoding.UTF8);
                 });
@@ -135,15 +137,15 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
         {
             var iniParser = new FileIniDataParser();
-            var baseUiConfig = iniParser.ReadFile($"{ConfiguratorModel.Pcsx2InisDir}\\{ConfiguratorModel.Pcsx2UiFileName}");
+            var baseUiConfig = iniParser.ReadFile($"{Model.Pcsx2InisDir}\\{Model.Pcsx2UiFileName}");
             var targetUiConfig = new IniData();
 
-            if (SettingsModel.CopyLogSettings) targetUiConfig["ProgramLog"].Merge(baseUiConfig["ProgramLog"]);
-            if (SettingsModel.CopyFolderSettings) targetUiConfig["Folders"].Merge(baseUiConfig["Folders"]);
-            if (SettingsModel.CopyFileSettings) targetUiConfig["Filenames"].Merge(baseUiConfig["Filenames"]);
-            if (SettingsModel.CopyWindowSettings) targetUiConfig["GSWindow"].Merge(baseUiConfig["GSWindow"]);
+            if (Settings.Model.CopyLogSettings) targetUiConfig["ProgramLog"].Merge(baseUiConfig["ProgramLog"]);
+            if (Settings.Model.CopyFolderSettings) targetUiConfig["Folders"].Merge(baseUiConfig["Folders"]);
+            if (Settings.Model.CopyFileSettings) targetUiConfig["Filenames"].Merge(baseUiConfig["Filenames"]);
+            if (Settings.Model.CopyWindowSettings) targetUiConfig["GSWindow"].Merge(baseUiConfig["GSWindow"]);
 
-            if (SettingsModel.UseIndependantMemCards)
+            if (Settings.Model.UseIndependantMemCards)
             {
                 var safeGameTitle = GameHelper.GetSafeGameTitle(game);
                 var memCardFileName = $"{safeGameTitle.Replace(" ", "")}.ps2";
@@ -154,7 +156,7 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
                 ExtractFormattedMemoryCard(baseUiConfig, memCardFileName);
             }
 
-            if (SettingsModel.ExposeAllConfigSettings)
+            if (Settings.Model.ExposeAllConfigSettings)
             {
                 targetUiConfig.Global["EnablePresets"] = "disabled";
                 targetUiConfig.Global["EnableGameFixes"] = "enabled";
@@ -162,20 +164,20 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
             }
 
             var isoPath = !Path.IsPathRooted(game.ApplicationPath)
-                ? $"{ConfiguratorModel.LaunchBoxDir}\\{game.ApplicationPath}"
+                ? $"{Model.LaunchBoxDir}\\{game.ApplicationPath}"
                 : game.ApplicationPath;
 
             targetUiConfig.Global["CurrentIso"] = isoPath.Replace("\\", "\\\\");
             targetUiConfig.Global["AskOnBoot"] = "disabled";
 
-            iniParser.WriteFile($"{targetConfigDir}\\{ConfiguratorModel.Pcsx2UiFileName}", targetUiConfig, Encoding.UTF8);
+            iniParser.WriteFile($"{targetConfigDir}\\{Model.Pcsx2UiFileName}", targetUiConfig, Encoding.UTF8);
         }
 
         private static void ExtractFormattedMemoryCard(IniData baseUiConfig, string memCardFileName)
         {
             var memCardsDir = baseUiConfig["Folders"]["MemoryCards"];
             memCardsDir = !Path.IsPathRooted(memCardsDir)
-                ? $"{ConfiguratorModel.Pcsx2AbsoluteDir}\\{memCardsDir}"
+                ? $"{Model.Pcsx2AbsoluteDir}\\{memCardsDir}"
                 : memCardsDir;
 
             if (File.Exists($"{memCardsDir}\\{memCardFileName}")) return;
@@ -185,8 +187,8 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
                 {
                     CreateNoWindow = true,
                     UseShellExecute = false,
-                    FileName = $"{ConfiguratorModel.LaunchBoxDir}\\7-Zip\\7z.exe",
-                    Arguments = $"e \"{ConfiguratorModel.PluginDir}\\Assets\\Mcd.7z\" -o\"{memCardsDir}\""
+                    FileName = $"{Model.LaunchBoxDir}\\7-Zip\\7z.exe",
+                    Arguments = $"e \"{Model.PluginDir}\\Assets\\Mcd.7z\" -o\"{memCardsDir}\""
                 }
             };
 
@@ -198,27 +200,27 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         [SuppressMessage("ReSharper", "InvertIf")]
         private static void CopyOtherSettings(string targetConfigDir)
         {
-            var baseConfigDir = ConfiguratorModel.Pcsx2InisDir;
+            var baseConfigDir = Model.Pcsx2InisDir;
 
-            if (SettingsModel.CopyVmSettingsFile)
+            if (Settings.Model.CopyVmSettingsFile)
             {
                 var vmSettingsFileName = "PCSX2_vm.ini";
                 File.Copy($"{baseConfigDir}\\{vmSettingsFileName}", $"{targetConfigDir}\\{vmSettingsFileName}", true);
             }
 
-            if (SettingsModel.CopyGsdxSettingsFile)
+            if (Settings.Model.CopyGsdxSettingsFile)
             {
                 var gsdxSettingsFileName = "GSdx.ini";
                 File.Copy($"{baseConfigDir}\\{gsdxSettingsFileName}", $"{targetConfigDir}\\{gsdxSettingsFileName}", true);
             }
 
-            if (SettingsModel.CopySpu2XSettingsFile)
+            if (Settings.Model.CopySpu2XSettingsFile)
             {
                 var spu2XSetiingsFileName = "SPU2-X.ini";
                 File.Copy($"{baseConfigDir}\\{spu2XSetiingsFileName}", $"{targetConfigDir}\\{spu2XSetiingsFileName}", true);
             }
 
-            if (SettingsModel.CopyLilyPadSettingsFile)
+            if (Settings.Model.CopyLilyPadSettingsFile)
             {
                 var lilyPadSettingsFileName = "LilyPad.ini";
                 File.Copy($"{baseConfigDir}\\{lilyPadSettingsFileName}", $"{targetConfigDir}\\{lilyPadSettingsFileName}", true);
@@ -227,13 +229,13 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
 
         private static string DownloadConfigFromRemote(string remoteConfigPath)
         {
-            var remoteConfigDir = $"{ConfiguratorModel.RemoteConfigsDir}\\{remoteConfigPath}";
+            var remoteConfigDir = $"{Model.RemoteConfigsDir}\\{remoteConfigPath}";
             SystemDeleteDir(remoteConfigDir);
 
-            var svnProcess = ConfiguratorModel.SvnProcess;
-            svnProcess.StartInfo.WorkingDirectory = ConfiguratorModel.RemoteConfigsDir;
+            var svnProcess = Model.SvnProcess;
+            svnProcess.StartInfo.WorkingDirectory = Model.RemoteConfigsDir;
 
-            svnProcess.StartInfo.Arguments = $"checkout \"{ConfiguratorModel.RemoteConfigsUrl}/{remoteConfigPath}\"";
+            svnProcess.StartInfo.Arguments = $"checkout \"{Model.RemoteConfigsUrl}/{remoteConfigPath}\"";
             svnProcess.Start();
             var svnStdOut = svnProcess.StandardOutput.ReadToEnd();
             svnProcess.WaitForExit();
@@ -258,14 +260,14 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
                 File.Copy(file, $"{targetGameConfigDir}\\{Path.GetFileName(file)}", overwrite: true);
             }
 
-            var remoteFile = $"{targetGameConfigDir}\\{ConfiguratorModel.RemoteConfigDummyFileName}";
+            var remoteFile = $"{targetGameConfigDir}\\{Model.RemoteConfigDummyFileName}";
             if (!File.Exists(remoteFile))
             {
-                File.Create($"{targetGameConfigDir}\\{ConfiguratorModel.RemoteConfigDummyFileName}").Dispose();
+                File.Create($"{targetGameConfigDir}\\{Model.RemoteConfigDummyFileName}").Dispose();
             }
 
             var iniParser = new FileIniDataParser();
-            var targetUiConfigFilePath = $"{targetGameConfigDir}\\{ConfiguratorModel.Pcsx2UiFileName}";
+            var targetUiConfigFilePath = $"{targetGameConfigDir}\\{Model.Pcsx2UiFileName}";
             var uiTweaksFilePath = $"{targetGameConfigDir}\\PCSX2_ui-tweak.ini";
 
             var targetUiConfig = iniParser.ReadFile(targetUiConfigFilePath);
@@ -281,10 +283,10 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
                 targetUiConfig.Merge(uiTweakConfig);
             }
 
-            var baseUiConfig = iniParser.ReadFile($"{ConfiguratorModel.Pcsx2InisDir}\\{ConfiguratorModel.Pcsx2UiFileName}");
+            var baseUiConfig = iniParser.ReadFile($"{Model.Pcsx2InisDir}\\{Model.Pcsx2UiFileName}");
             var cheatsDir = baseUiConfig["Folders"]["Cheats"];
             cheatsDir = !Path.IsPathRooted(cheatsDir)
-                ? $"{ConfiguratorModel.Pcsx2AbsoluteDir}\\{cheatsDir}"
+                ? $"{Model.Pcsx2AbsoluteDir}\\{cheatsDir}"
                 : cheatsDir;
             foreach (var file in Directory.GetFiles(targetGameConfigDir, "*.pnach"))
             {
@@ -296,7 +298,7 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
 
         private static bool DoesRemoteConfigDirNeedUpdate(string remoteConfigDir)
         {
-            var svnProcess = ConfiguratorModel.SvnProcess;
+            var svnProcess = Model.SvnProcess;
             svnProcess.StartInfo.WorkingDirectory = remoteConfigDir;
 
             svnProcess.StartInfo.Arguments = "info -r HEAD";

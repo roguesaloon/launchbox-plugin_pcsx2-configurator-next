@@ -17,15 +17,15 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         public static string GetGameConfigDir(IGame game)
         {
             var gameConfigDirName = !IsGameUsingRocketLauncher(game) ? GetSafeGameTitle(game) : Path.GetFileNameWithoutExtension(game.ApplicationPath);
-            var gameConfigDir = $"{SettingsModel.GameConfigsDir}\\{gameConfigDirName}";
+            var gameConfigDir = $"{Settings.Model.GameConfigsDir}\\{gameConfigDirName}";
             return gameConfigDir;
         }
 
         public static string GetRemoteConfigPath(IGame game)
         {
-            var svnProcess = ConfiguratorModel.SvnProcess;
-            svnProcess.StartInfo.WorkingDirectory = ConfiguratorModel.RemoteConfigsDir;
-            svnProcess.StartInfo.Arguments = $"list {ConfiguratorModel.RemoteConfigsUrl}";
+            var svnProcess = Configurator.Model.SvnProcess;
+            svnProcess.StartInfo.WorkingDirectory = Configurator.Model.RemoteConfigsDir;
+            svnProcess.StartInfo.Arguments = $"list {Configurator.Model.RemoteConfigsUrl}";
 
             svnProcess.Start();
             var svnStdOut = svnProcess.StandardOutput.ReadToEnd();
@@ -47,7 +47,7 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         public static bool IsGameConfigured(IGame game)
         {
             var gameConfigDir = GetGameConfigDir(game);
-            var uiConfigFile = $"{gameConfigDir}\\{ConfiguratorModel.Pcsx2UiFileName}";
+            var uiConfigFile = $"{gameConfigDir}\\{Configurator.Model.Pcsx2UiFileName}";
 
             return File.Exists(uiConfigFile);
         }
@@ -56,7 +56,7 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         {
             if (!IsGameConfigured(game)) return false;
             var gameConfigDir = GetGameConfigDir(game);
-            var remoteFile = $"{gameConfigDir}\\{ConfiguratorModel.RemoteConfigDummyFileName}";
+            var remoteFile = $"{gameConfigDir}\\{Configurator.Model.RemoteConfigDummyFileName}";
 
             return File.Exists(remoteFile);
         }

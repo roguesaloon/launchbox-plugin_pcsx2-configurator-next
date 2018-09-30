@@ -16,8 +16,6 @@ namespace PCSX2_Configurator_Next.PluginLayer
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         public void OnEventRaised(string eventType)
         {
-            //Task.Run(() => MessageBox.Show(new Form { TopMost = true }, eventType));
-
             switch (eventType)
             {
                 case SystemEventTypes.PluginInitialized:
@@ -34,7 +32,7 @@ namespace PCSX2_Configurator_Next.PluginLayer
         private static void OnPluginInitialized()
         {
             DownloadSvn();
-            SettingsModel.Init();
+            Settings.Model.Init();
         }
 
         private static void OnSelectionChanged()
@@ -45,8 +43,8 @@ namespace PCSX2_Configurator_Next.PluginLayer
 
         private static void DownloadSvn()
         {
-            var svnDir = $"{ConfiguratorModel.LaunchBoxDir}\\SVN";
-            var svnZip = $"{ConfiguratorModel.LaunchBoxDir}\\SVN.zip";
+            var svnDir = $"{Configurator.Model.LaunchBoxDir}\\SVN";
+            var svnZip = $"{Configurator.Model.LaunchBoxDir}\\SVN.zip";
 
             if (Directory.Exists(svnDir)) return;
             try
