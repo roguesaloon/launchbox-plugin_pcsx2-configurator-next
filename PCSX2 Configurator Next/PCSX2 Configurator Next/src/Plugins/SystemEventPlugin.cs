@@ -4,12 +4,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using PCSX2_Configurator_Next.ConfiguratorLayer;
+using PCSX2_Configurator_Next.Core;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
 
-namespace PCSX2_Configurator_Next.PluginLayer
+namespace PCSX2_Configurator_Next.Plugins
 {
     internal class SystemEventsPlugin : ISystemEventsPlugin
     {

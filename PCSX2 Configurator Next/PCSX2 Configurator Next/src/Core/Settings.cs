@@ -4,7 +4,7 @@ using System.Text;
 using IniParser;
 using IniParser.Model;
 
-namespace PCSX2_Configurator_Next.ConfiguratorLayer
+namespace PCSX2_Configurator_Next.Core
 {
     public class Settings
     {
@@ -28,7 +28,6 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
             {
                 ReadFromSettingsFile();
             }
-
 
             void GeneratSettingsFile()
             {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -8,7 +7,7 @@ using Microsoft.Win32;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
-namespace PCSX2_Configurator_Next.ConfiguratorLayer
+namespace PCSX2_Configurator_Next.Core
 {
     public class ConfiguratorModel
     {
@@ -25,7 +24,6 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         public string Pcsx2AbsoluteDir => _pcsx2AbsoluteDir ?? (_pcsx2AbsoluteDir = Path.GetDirectoryName(Pcsx2AbsoluteAppPath));
         public string Pcsx2InisDir => _pcsx2InisDir ?? (_pcsx2InisDir = GetPcsx2InisDir());
         public string Pcsx2BaseUiFilePath => _pcsx2BaseUiFilePath ?? (_pcsx2BaseUiFilePath = $"{Pcsx2InisDir}\\{Pcsx2UiFileName}");
-        public Process SvnProcess => _svnProcess ?? (_svnProcess = GetSvnProcess());
 
         private IEmulator _pcsx2Emulator;
         [SuppressMessage("ReSharper", "InvertIf")]
@@ -84,23 +82,6 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
             }
 
             return pcsx2InisDir;
-        }
-
-        private Process _svnProcess;
-        private Process GetSvnProcess()
-        {
-            var svnProcess = new Process
-            {
-                StartInfo =
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    FileName = $"{LaunchBoxDir}\\SVN\\bin\\svn.exe"
-                }
-            };
-
-            return svnProcess;
         }
     }
 }

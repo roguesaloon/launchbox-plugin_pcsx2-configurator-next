@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IniParser;
@@ -9,7 +7,7 @@ using IniParser.Model;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
-namespace PCSX2_Configurator_Next.ConfiguratorLayer
+namespace PCSX2_Configurator_Next.Core
 {
     public static class Configurator
     {
@@ -19,7 +17,7 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         {
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
 
-            DeleteConfigDir(game);
+            Utils.SystemRemoveDir(gameConfigDir);
             Directory.CreateDirectory(gameConfigDir);
 
             CreateUiConfigFile(gameConfigDir, game);
@@ -49,7 +47,7 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         public static bool CheckForConfigUpdates(string remoteConfigPath)
         {
             var remoteConfigDir = $"{Model.RemoteConfigsDir}\\{remoteConfigPath}";
-            return DoesRemoteConfigDirNeedUpdate(remoteConfigDir);
+            return Utils.SvnDirNeedsUpdate(remoteConfigDir);
         }
 
         public static void UpdateGameConfig(IGame game, string remoteConfigPath)
@@ -64,7 +62,8 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
 
         public static void RemoveConfig(IGame game)
         {
-            DeleteConfigDir(game);
+            var gameConfigDir = GameHelper.GetGameConfigDir(game);
+            Utils.SystemRemoveDir(gameConfigDir);
             ClearGameConfigParams(game);
         }
 
@@ -128,12 +127,6 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
             game.ConfigurationCommandLine = string.Empty;
         }
 
-        private static void DeleteConfigDir(IGame game)
-        {
-            var gameConfigDir = GameHelper.GetGameConfigDir(game);
-            SystemDeleteDir(gameConfigDir);
-        }
-
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
         {
             var iniParser = new FileIniDataParser();
@@ -181,19 +174,10 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
                 : memCardsDir;
 
             if (File.Exists($"{memCardsDir}\\{memCardFileName}")) return;
-            var sevenZipProcess = new Process
-            {
-                StartInfo =
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    FileName = $"{Model.LaunchBoxDir}\\7-Zip\\7z.exe",
-                    Arguments = $"e \"{Model.PluginDir}\\Assets\\Mcd.7z\" -o\"{memCardsDir}\""
-                }
-            };
 
-            sevenZipProcess.Start();
-            sevenZipProcess.WaitForExit();
+            var memCardArchive = $"{Model.PluginDir}\\Assets\\Mcd.7z";
+            Utils.SevenZipExtract(memCardArchive, memCardsDir);
+
             File.Move($"{memCardsDir}\\Mcd.ps2", $"{memCardsDir}\\{memCardFileName}");
         }
 
@@ -230,20 +214,16 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
         private static string DownloadConfigFromRemote(string remoteConfigPath)
         {
             var remoteConfigDir = $"{Model.RemoteConfigsDir}\\{remoteConfigPath}";
-            SystemDeleteDir(remoteConfigDir);
+            Utils.SystemRemoveDir(remoteConfigDir);
 
-            var svnProcess = Model.SvnProcess;
-            svnProcess.StartInfo.WorkingDirectory = Model.RemoteConfigsDir;
-
-            svnProcess.StartInfo.Arguments = $"checkout \"{Model.RemoteConfigsUrl}/{remoteConfigPath}\"";
-            svnProcess.Start();
-            var svnStdOut = svnProcess.StandardOutput.ReadToEnd();
-            svnProcess.WaitForExit();
+            var remotePath = $"{Model.RemoteConfigsUrl}/{remoteConfigPath}";
+            var workingDir = Model.RemoteConfigsDir;
+            var output = Utils.SvnCheckout(remotePath, workingDir);
 
             return 
-                svnStdOut.StartsWith("Checked out revision") ? "No Update" :
-                svnStdOut.Contains("UU   ") ? "Updated" : 
-                svnStdOut.Contains("svn: E") ? "Failed" : 
+                output.StartsWith("Checked out revision") ? "No Update" :
+                output.Contains("UU   ") ? "Updated" :
+                output.Contains("svn: E") ? "Failed" : 
                 "Downloaded";
         }
 
@@ -294,52 +274,6 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
             }
 
             iniParser.WriteFile(targetUiConfigFilePath, targetUiConfig, Encoding.UTF8);
-        }
-
-        private static bool DoesRemoteConfigDirNeedUpdate(string remoteConfigDir)
-        {
-            var svnProcess = Model.SvnProcess;
-            svnProcess.StartInfo.WorkingDirectory = remoteConfigDir;
-
-            svnProcess.StartInfo.Arguments = "info -r HEAD";
-            svnProcess.Start();
-            var svnHeadInfo = svnProcess.StandardOutput.ReadToEnd();
-            svnProcess.WaitForExit();
-
-            svnProcess.StartInfo.Arguments = "info";
-            svnProcess.Start();
-            var svnInfo = svnProcess.StandardOutput.ReadToEnd();
-            svnProcess.WaitForExit();
-
-            svnHeadInfo = GetLastChangedRev(svnHeadInfo);
-            svnInfo = GetLastChangedRev(svnInfo);
-
-            return svnHeadInfo != svnInfo;
-
-            string GetLastChangedRev(string output)
-            {
-                var arr = output.Replace("\r\n", "\n").Split('\n');
-                var ret = arr.FirstOrDefault(_ => _.StartsWith("Last Changed Rev"));
-                return ret;
-            }
-        }
-
-        private static void SystemDeleteDir(string dir)
-        {
-            if (!Directory.Exists(dir)) return;
-            var deleteDirProcess = new Process
-            {
-                StartInfo =
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    FileName = "cmd.exe",
-                    Arguments = $"/c rmdir /s /q \"{dir}\""
-                }
-            };
-
-            deleteDirProcess.Start();
-            deleteDirProcess.WaitForExit();
         }
     }
 }

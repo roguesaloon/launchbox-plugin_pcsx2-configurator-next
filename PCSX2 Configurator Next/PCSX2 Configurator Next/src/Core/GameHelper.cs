@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
-namespace PCSX2_Configurator_Next.ConfiguratorLayer
+namespace PCSX2_Configurator_Next.Core
 {
     public static class GameHelper
     {
@@ -23,24 +23,15 @@ namespace PCSX2_Configurator_Next.ConfiguratorLayer
 
         public static string GetRemoteConfigPath(IGame game)
         {
-            var svnProcess = Configurator.Model.SvnProcess;
-            svnProcess.StartInfo.WorkingDirectory = Configurator.Model.RemoteConfigsDir;
-            svnProcess.StartInfo.Arguments = $"list {Configurator.Model.RemoteConfigsUrl}";
+            var remotePath = Configurator.Model.RemoteConfigsUrl;
+            bool WithGameId(string str) => str.Contains($"id#{game.LaunchBoxDbId}");
 
-            svnProcess.Start();
-            var svnStdOut = svnProcess.StandardOutput.ReadToEnd();
-            svnProcess.WaitForExit();
-
-            var gameList = svnStdOut.Replace("\r\n", "\n").Split('\n');
-            var selectedGamePath = gameList.FirstOrDefault(_ => _.Contains($"id#{game.LaunchBoxDbId}"));
-            selectedGamePath = selectedGamePath?.Substring(0, selectedGamePath.Length - 1);
-
+            var selectedGamePath = Utils.SvnFindPathInRemote(remotePath, WithGameId);
             return selectedGamePath;
         }
 
         public static bool IsValidForGame(IGame game)
         {
-            // TODO: Expand This
             return game.Platform.ToLower() == "sony playstation 2";
         }
 

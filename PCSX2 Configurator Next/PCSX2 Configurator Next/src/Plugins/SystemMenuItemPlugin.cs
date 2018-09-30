@@ -2,7 +2,7 @@
 using System.Drawing;
 using Unbroken.LaunchBox.Plugins;
 
-namespace PCSX2_Configurator_Next.PluginLayer
+namespace PCSX2_Configurator_Next.Plugins
 {
     internal class SystemMenuItemPlugin : ISystemMenuItemPlugin
     {
