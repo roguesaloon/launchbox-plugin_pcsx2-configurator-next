@@ -62,7 +62,7 @@ namespace PCSX2_Configurator_Next.Core
         private string GetPcsx2AppPath(bool absolutePath)
         {
             var appPath = Pcsx2Emulator.ApplicationPath;
-            var absolutAppPath = !Path.IsPathRooted(appPath) ? $"{LaunchBoxDir}\\{appPath}" : appPath;
+            var absolutAppPath = Utils.LaunchBoxRelativePathToAbsolute(appPath);
 
             appPath = absolutePath ? absolutAppPath : appPath;
 

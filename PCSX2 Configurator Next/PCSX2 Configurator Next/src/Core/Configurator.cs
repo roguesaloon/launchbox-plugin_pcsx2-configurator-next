@@ -101,9 +101,7 @@ namespace PCSX2_Configurator_Next.Core
                 Task.Run(() =>
                 {
                     var rocketLauncherPath = PluginHelper.DataManager.GetEmulatorById(game.EmulatorId).ApplicationPath;
-                    var rocketLauncherDir = Path.GetDirectoryName(!Path.IsPathRooted(rocketLauncherPath)
-                        ? $"{Model.LaunchBoxDir}\\{rocketLauncherPath}"
-                        : rocketLauncherPath);
+                    var rocketLauncherDir = Utils.LaunchBoxRelativePathToAbsolute(rocketLauncherPath);
 
                     var iniParser = new FileIniDataParser();
                     var rocketLauncherPcsx2ConfigPath = $"{rocketLauncherDir}\\Modules\\PCSX2\\PCSX2.ini";
@@ -156,9 +154,7 @@ namespace PCSX2_Configurator_Next.Core
                 targetUiConfig.Global["EnableSpeedHacks"] = "enabled";
             }
 
-            var isoPath = !Path.IsPathRooted(game.ApplicationPath)
-                ? $"{Model.LaunchBoxDir}\\{game.ApplicationPath}"
-                : game.ApplicationPath;
+            var isoPath = Utils.LaunchBoxRelativePathToAbsolute(game.ApplicationPath);
 
             targetUiConfig.Global["CurrentIso"] = isoPath.Replace("\\", "\\\\");
             targetUiConfig.Global["AskOnBoot"] = "disabled";
@@ -169,9 +165,7 @@ namespace PCSX2_Configurator_Next.Core
         private static void ExtractFormattedMemoryCard(IniData baseUiConfig, string memCardFileName)
         {
             var memCardsDir = baseUiConfig["Folders"]["MemoryCards"];
-            memCardsDir = !Path.IsPathRooted(memCardsDir)
-                ? $"{Model.Pcsx2AbsoluteDir}\\{memCardsDir}"
-                : memCardsDir;
+            memCardsDir = Utils.Pcsx2RelativePathToAbsolute(memCardsDir);
 
             if (File.Exists($"{memCardsDir}\\{memCardFileName}")) return;
 
@@ -268,9 +262,7 @@ namespace PCSX2_Configurator_Next.Core
 
             var baseUiConfig = iniParser.ReadFile($"{Model.Pcsx2InisDir}\\{Model.Pcsx2UiFileName}");
             var cheatsDir = baseUiConfig["Folders"]["Cheats"];
-            cheatsDir = !Path.IsPathRooted(cheatsDir)
-                ? $"{Model.Pcsx2AbsoluteDir}\\{cheatsDir}"
-                : cheatsDir;
+            cheatsDir = Utils.Pcsx2RelativePathToAbsolute(cheatsDir);
 
             foreach (var file in Directory.GetFiles(targetGameConfigDir, "*.pnach"))
             {

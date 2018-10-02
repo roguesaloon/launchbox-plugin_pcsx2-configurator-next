@@ -70,6 +70,27 @@ namespace PCSX2_Configurator_Next.Core
             return path;
         }
 
+        public static string LaunchBoxRelativePathToAbsolute(string launchRelativeBoxPath)
+        {
+            return RelativePathToAbsolute(Configurator.Model.LaunchBoxDir, launchRelativeBoxPath);
+        }
+
+        public static string Pcsx2RelativePathToAbsolute(string pcsx2RelativePath)
+        {
+            return RelativePathToAbsolute(Configurator.Model.Pcsx2AbsoluteDir, pcsx2RelativePath);
+        }
+
+        private static string RelativePathToAbsolute(string relativeTo, string relativePath)
+        {
+            if (Path.IsPathRooted(relativePath))
+            {
+                return relativePath;
+            }
+
+            var absolutePath = $"{relativeTo}\\{relativePath}";
+            return Path.GetFullPath(absolutePath);
+        }
+
         private static string SvnOutputLine(string svnOutput, Func<string, bool> withCondition)
         {
             var arr = svnOutput.Replace("\r\n", "\n").Split('\n');
