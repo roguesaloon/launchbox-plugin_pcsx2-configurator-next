@@ -12,22 +12,20 @@
     </Window.Background>
     <Grid>
 
-        <StackPanel>
-            <Label x:Name="ConfiguredLbl" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,25,10,0" FontSize="22" FontFamily="../../fonts/#pixelFJ8pt1" Width="530" Height="56" HorizontalContentAlignment="Center">
-                <Label.Effect>
-                    <DropShadowEffect ShadowDepth="3" BlurRadius="1" Color="#FF1B39AE"/>
-                </Label.Effect>
-                <wpfExtensions:OutlinedTextBlock Stroke="#19a6ff"
+        <Label x:Name="ConfiguredLbl" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,17,10,0" FontSize="22" FontFamily="../../fonts/#pixelFJ8pt1" Width="530" Height="85" HorizontalContentAlignment="Center">
+            <Label.Effect>
+                <DropShadowEffect ShadowDepth="5" Color="#FF8DC7E0" Opacity="0.75" BlurRadius="10" Direction="0"/>
+            </Label.Effect>
+            <wpfExtensions:OutlinedTextBlock Stroke="#19a6ff"
                                                  Fill="White"
                                                  ClipToBounds="True"
                                                  StrokePosition="Outside"
-                                                 StrokeThickness="2" Text="[Game Name]: [Configured]" TextAlignment="Center" Height="46" Width="520">
-                </wpfExtensions:OutlinedTextBlock>
-            </Label>
-            <StackPanel.Effect>
-                <DropShadowEffect ShadowDepth="5" Color="#FFBBDCEA" Opacity="0.75" BlurRadius="10" Direction="0"/>
-            </StackPanel.Effect>
-        </StackPanel>
+                                                 StrokeThickness="2" Text="[Game Name]: [Configured]" TextAlignment="Center" Height="75" Width="520" TextWrapping="Wrap">
+                <wpfExtensions:OutlinedTextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="3" BlurRadius="1" Color="#FF1B39AE"/>
+                </wpfExtensions:OutlinedTextBlock.Effect>
+            </wpfExtensions:OutlinedTextBlock>
+        </Label>
 
         <Grid x:Name="CreateConfigBtnGrd" Margin="185,95,181,220">
             <Label x:Name="CreateConfigBtnLbl" FontFamily="../../fonts/#pixelFJ8pt1" FontSize="20">
