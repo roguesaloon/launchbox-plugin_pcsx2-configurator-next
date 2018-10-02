@@ -80,17 +80,6 @@ namespace PCSX2_Configurator_Next.Core
             return RelativePathToAbsolute(Configurator.Model.Pcsx2AbsoluteDir, pcsx2RelativePath);
         }
 
-        private static string RelativePathToAbsolute(string relativeTo, string relativePath)
-        {
-            if (Path.IsPathRooted(relativePath))
-            {
-                return relativePath;
-            }
-
-            var absolutePath = $"{relativeTo}\\{relativePath}";
-            return Path.GetFullPath(absolutePath);
-        }
-
         private static string SvnOutputLine(string svnOutput, Func<string, bool> withCondition)
         {
             var arr = svnOutput.Replace("\r\n", "\n").Split('\n');
@@ -118,6 +107,17 @@ namespace PCSX2_Configurator_Next.Core
             svnProcess.WaitForExit();
 
             return output;
+        }
+
+        private static string RelativePathToAbsolute(string relativeTo, string relativePath)
+        {
+            if (Path.IsPathRooted(relativePath))
+            {
+                return relativePath;
+            }
+
+            var absolutePath = $"{relativeTo}\\{relativePath}";
+            return Path.GetFullPath(absolutePath);
         }
     }
 }
