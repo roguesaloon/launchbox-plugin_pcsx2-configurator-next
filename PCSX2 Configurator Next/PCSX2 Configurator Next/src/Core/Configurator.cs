@@ -189,25 +189,29 @@ namespace PCSX2_Configurator_Next.Core
             if (Settings.Model.CopyVmSettingsFile)
             {
                 var vmSettingsFileName = "PCSX2_vm.ini";
-                File.Copy($"{baseConfigDir}\\{vmSettingsFileName}", $"{targetConfigDir}\\{vmSettingsFileName}", true);
+                try { File.Copy($"{baseConfigDir}\\{vmSettingsFileName}", $"{targetConfigDir}\\{vmSettingsFileName}", true); }
+                catch { /*ignored*/ }
             }
 
             if (Settings.Model.CopyGsdxSettingsFile)
             {
                 var gsdxSettingsFileName = "GSdx.ini";
-                File.Copy($"{baseConfigDir}\\{gsdxSettingsFileName}", $"{targetConfigDir}\\{gsdxSettingsFileName}", true);
+                try { File.Copy($"{baseConfigDir}\\{gsdxSettingsFileName}", $"{targetConfigDir}\\{gsdxSettingsFileName}", true); }
+                catch { /*ignored*/ }
             }
 
             if (Settings.Model.CopySpu2XSettingsFile)
             {
                 var spu2XSetiingsFileName = "SPU2-X.ini";
-                File.Copy($"{baseConfigDir}\\{spu2XSetiingsFileName}", $"{targetConfigDir}\\{spu2XSetiingsFileName}", true);
+                try { File.Copy($"{baseConfigDir}\\{spu2XSetiingsFileName}", $"{targetConfigDir}\\{spu2XSetiingsFileName}", true); }
+                catch { /*ignored*/ }
             }
 
             if (Settings.Model.CopyLilyPadSettingsFile)
             {
                 var lilyPadSettingsFileName = "LilyPad.ini";
-                File.Copy($"{baseConfigDir}\\{lilyPadSettingsFileName}", $"{targetConfigDir}\\{lilyPadSettingsFileName}", true);
+                try { File.Copy($"{baseConfigDir}\\{lilyPadSettingsFileName}", $"{targetConfigDir}\\{lilyPadSettingsFileName}", true); }
+                catch { /*ignored*/ }
             }
         }
 
@@ -227,7 +231,6 @@ namespace PCSX2_Configurator_Next.Core
                 "Downloaded";
         }
 
-        [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
         private static void ApplyRemoteConfig(IGame game, string remoteConfigDir)
         {
             CreateConfig(game);
@@ -268,6 +271,7 @@ namespace PCSX2_Configurator_Next.Core
             cheatsDir = !Path.IsPathRooted(cheatsDir)
                 ? $"{Model.Pcsx2AbsoluteDir}\\{cheatsDir}"
                 : cheatsDir;
+
             foreach (var file in Directory.GetFiles(targetGameConfigDir, "*.pnach"))
             {
                 File.Move(file, $"{cheatsDir}\\{Path.GetFileName(file)}");
