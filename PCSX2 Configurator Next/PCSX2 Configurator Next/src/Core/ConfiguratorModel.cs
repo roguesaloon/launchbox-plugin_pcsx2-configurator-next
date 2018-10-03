@@ -35,12 +35,7 @@ namespace PCSX2_Configurator_Next.Core
                 if (_pcsx2Emulator == null)
                 {
                     var emulators = PluginHelper.DataManager.GetAllEmulators();
-                    var pcsx2Emulators = emulators.Where(_ => _.Title.ToLower().Contains("pcsx2")).ToList();
-
-                    _pcsx2Emulator = pcsx2Emulators.Count() > 1
-                        ? pcsx2Emulators.First()
-                        : pcsx2Emulators.First(_ => string.Equals(_.Title, Settings.Model.Pcsx2BuildName, 
-                            StringComparison.InvariantCultureIgnoreCase));
+                    _pcsx2Emulator = emulators.First(_ => _.Title.ToLower().Contains("pcsx2"));
                 }
 
                 return _pcsx2Emulator;

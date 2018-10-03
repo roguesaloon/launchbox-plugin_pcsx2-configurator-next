@@ -65,7 +65,6 @@ namespace PCSX2_Configurator_Next.Core
         }
 
         public string GameConfigsDir { get; private set; } = Configurator.Model.Pcsx2InisDir;
-        public string Pcsx2BuildName { get; private set; } = "PCSX2";
         public bool CopyLogSettings { get; private set; } = true;
         public bool CopyFolderSettings { get; private set; } = false;
         public bool CopyFileSettings { get; private set; } = true;
