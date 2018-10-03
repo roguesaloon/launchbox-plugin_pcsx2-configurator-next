@@ -35,7 +35,7 @@ namespace PCSX2_Configurator_Next.Core
 
                 foreach (var setting in settings)
                 {
-                    var value = setting.GetValue(null).ToString();
+                    var value = setting.GetValue(this).ToString();
                     value = setting.PropertyType == typeof(bool) ? value.ToLower() : value;
                     settingsFile["PCSX2_Configurator"][setting.Name] = value;
                 }
@@ -54,11 +54,11 @@ namespace PCSX2_Configurator_Next.Core
                     if (setting.PropertyType == typeof(bool))
                     {
                         var value = bool.Parse(settingString);
-                        setting.SetValue(null, value);
+                        setting.SetValue(this, value);
                     }
                     else
                     {
-                        setting.SetValue(null, settingString);
+                        setting.SetValue(this, settingString);
                     }
                 }
             }
