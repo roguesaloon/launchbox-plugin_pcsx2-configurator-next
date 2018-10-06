@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Win32;
-using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next.Core
@@ -18,7 +16,7 @@ namespace PCSX2_Configurator_Next.Core
         public string RemoteConfigDummyFileName => "remote";
         public string Pcsx2UiFileName => "PCSX2_ui.ini";
         public string SvnDir => $"{LaunchBoxDir}\\SVN";
-        public string Pcsx2CommandLine => Pcsx2Emulator.CommandLine;
+        public string Pcsx2CommandLine => _pcsx2Emulator.CommandLine;
         public string Pcsx2RelativeAppPath => _pcsx2RelativeAppPath ?? (_pcsx2RelativeAppPath = GetPcsx2AppPath(absolutePath: false));
         public string Pcsx2AbsoluteAppPath => _pcsx2AbsoluteAppPath ?? (_pcsx2AbsoluteAppPath = GetPcsx2AppPath(absolutePath: true));
         public string Pcsx2RelativeDir => _pcsx2RelativeDir ?? (_pcsx2RelativeDir = Path.GetDirectoryName(Pcsx2RelativeAppPath));
@@ -26,20 +24,14 @@ namespace PCSX2_Configurator_Next.Core
         public string Pcsx2InisDir => _pcsx2InisDir ?? (_pcsx2InisDir = GetPcsx2InisDir());
         public string Pcsx2BaseUiFilePath => _pcsx2BaseUiFilePath ?? (_pcsx2BaseUiFilePath = $"{Pcsx2InisDir}\\{Pcsx2UiFileName}");
 
-        private IEmulator _pcsx2Emulator;
-        [SuppressMessage("ReSharper", "InvertIf")]
-        private IEmulator Pcsx2Emulator
+        private readonly IEmulator _pcsx2Emulator;
+        public ConfiguratorModel(string buildTitle)
         {
-            get
-            {
-                if (_pcsx2Emulator == null)
-                {
-                    var emulators = PluginHelper.DataManager.GetAllEmulators();
-                    _pcsx2Emulator = emulators.First(_ => _.Title.ToLower().Contains("pcsx2"));
-                }
-
-                return _pcsx2Emulator;
-            }
+            var pcsx2Emulators = Utils.LaunchBoxFindEmulatorsByTitle("PCSX2");
+            _pcsx2Emulator = pcsx2Emulators.Length > 1
+                ? Utils.LaunchBoxFindEmulatorsByTitle(buildTitle).FirstOrDefault()
+                : pcsx2Emulators.First();
+            _pcsx2Emulator = _pcsx2Emulator ?? (pcsx2Emulators.Length > 0 ? pcsx2Emulators.First() : null);
         }
 
         private string _remoteConfigsDir;
@@ -61,7 +53,7 @@ namespace PCSX2_Configurator_Next.Core
         private string _pcsx2AbsoluteDir;
         private string GetPcsx2AppPath(bool absolutePath)
         {
-            var appPath = Pcsx2Emulator.ApplicationPath;
+            var appPath = _pcsx2Emulator.ApplicationPath;
             var absolutAppPath = Utils.LaunchBoxRelativePathToAbsolute(appPath);
 
             appPath = absolutePath ? absolutAppPath : appPath;

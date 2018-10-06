@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Unbroken.LaunchBox.Plugins;
+using Unbroken.LaunchBox.Plugins.Data;
 
 namespace PCSX2_Configurator_Next.Core
 {
@@ -78,6 +80,14 @@ namespace PCSX2_Configurator_Next.Core
         public static string Pcsx2RelativePathToAbsolute(string pcsx2RelativePath)
         {
             return RelativePathToAbsolute(Configurator.Model.Pcsx2AbsoluteDir, pcsx2RelativePath);
+        }
+
+        public static IEmulator[] LaunchBoxFindEmulatorsByTitle(string title)
+        {
+            var emulators = PluginHelper.DataManager.GetAllEmulators();
+            emulators = emulators.Where(_ => _.Title.ToLower().Contains(title.ToLower())).ToArray();
+
+            return emulators;
         }
 
         private static string SvnOutputLine(string svnOutput, Func<string, bool> withCondition)

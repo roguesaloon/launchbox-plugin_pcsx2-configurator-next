@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,14 @@ namespace PCSX2_Configurator_Next.Core
 {
     public static class Configurator
     {
-        public static ConfiguratorModel Model { get; } = new ConfiguratorModel();
+        public static ConfiguratorModel Model { get; private set; }
+
+        public static void Initialize()
+        {
+            Settings.Initialize();
+            Model = new ConfiguratorModel(Settings.Model.Pcsx2BuildTitle);
+            Settings.ReplaceValues(new KeyValuePair<string, string>("%PCSX2_INIS_DIR%", Model.Pcsx2InisDir));
+        }
 
         public static void CreateConfig(IGame game)
         {

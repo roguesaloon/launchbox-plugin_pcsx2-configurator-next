@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using PCSX2_Configurator_Next.Core;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
@@ -31,8 +32,11 @@ namespace PCSX2_Configurator_Next.Plugins
 
         private static void OnPluginInitialized()
         {
+#if DEBUG
+            Thread.Sleep(3000);
+#endif
+            Configurator.Initialize();
             DownloadSvn();
-            Settings.Model.Init();
         }
 
         private static void OnSelectionChanged()

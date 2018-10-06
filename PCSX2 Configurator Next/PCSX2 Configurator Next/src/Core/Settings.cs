@@ -1,70 +1,110 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using IniParser;
-using IniParser.Model;
 
 namespace PCSX2_Configurator_Next.Core
 {
-    public class Settings
+    public static class Settings
     {
         public static SettingsModel Model { get; } = new SettingsModel();
+
+        private static readonly string SettingsFilePath =
+            $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Settings.ini";
+
+        private static readonly FileIniDataParser IniParser = new FileIniDataParser();
+
+        public static void Initialize()
+        {
+            CreateEmptySettingsFile();
+            WriteModelToSettingsFile();
+            ReadModelFromSettingsFile();
+        }
+
+        public static void ReplaceValues(params KeyValuePair<string,string>[] valuePairs)
+        {
+            var settingsFileString = File.ReadAllText(SettingsFilePath);
+
+            foreach (var valuePair in valuePairs)
+            {
+                settingsFileString = settingsFileString.Replace(valuePair.Key, valuePair.Value);
+            }
+
+            File.WriteAllText(SettingsFilePath, settingsFileString, Encoding.UTF8);
+            ReadModelFromSettingsFile();
+        }
+
+        private static void CreateEmptySettingsFile()
+        {
+            if (!File.Exists(SettingsFilePath))
+            {
+                File.CreateText(SettingsFilePath).Dispose();
+            }
+        }
+
+        private static void WriteModelToSettingsFile()
+        {
+            var settingsFile = IniParser.ReadFile(SettingsFilePath);
+            var settings = settingsFile["PCSX2_Configurator"];
+
+            var properties = typeof(SettingsModel).GetProperties();
+            foreach (var property in properties)
+            {
+                if (settings.ContainsKey(property.Name)) continue;
+
+                var value = GetModelProperty(property);
+                settings[property.Name] = value;
+            }
+
+            IniParser.WriteFile(SettingsFilePath, settingsFile, Encoding.UTF8);
+        }
+
+        private static void ReadModelFromSettingsFile()
+        {
+            var settingsFile = IniParser.ReadFile(SettingsFilePath);
+            var settings = settingsFile["PCSX2_Configurator"];
+
+            var properties = typeof(SettingsModel).GetProperties();
+            foreach (var property in properties)
+            {
+                var data = settings[property.Name];
+                SetModelProperty(property, data);
+            }
+        }
+
+        private static string GetModelProperty(PropertyInfo property)
+        {
+            var value = property.GetValue(Model).ToString();
+            value = property.PropertyType == typeof(bool) ? value.ToLower() : value;
+
+            return value;
+        }
+
+        private static void SetModelProperty(PropertyInfo property, string data)
+        {
+            object value;
+            if (property.PropertyType == typeof(bool))
+            {
+                value = bool.Parse(data);
+            }
+            else
+            {
+                value = data;
+            }
+
+            property.SetValue(Model, value, BindingFlags.NonPublic | BindingFlags.Instance, 
+                null, null, CultureInfo.CurrentCulture);
+        }
     }
 
     [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
     public class SettingsModel
     {
-        public void Init()
-        {
-            var settingsFilePath = $"{Configurator.Model.PluginDir}\\Settings.ini";
-            var settings = typeof(SettingsModel).GetProperties();
-            var iniParser = new FileIniDataParser();
-
-            if (!File.Exists(settingsFilePath))
-            {
-                GeneratSettingsFile();
-            }
-            else
-            {
-                ReadFromSettingsFile();
-            }
-
-            void GeneratSettingsFile()
-            {
-                var settingsFile = new IniData();
-
-                foreach (var setting in settings)
-                {
-                    var value = setting.GetValue(this).ToString();
-                    value = setting.PropertyType == typeof(bool) ? value.ToLower() : value;
-                    settingsFile["PCSX2_Configurator"][setting.Name] = value;
-                }
-
-                iniParser.WriteFile(settingsFilePath, settingsFile, Encoding.UTF8);
-            }
-
-            void ReadFromSettingsFile()
-            {
-                var settingsFile = iniParser.ReadFile(settingsFilePath);
-
-                foreach (var setting in settings)
-                {
-                    var settingString = settingsFile["PCSX2_Configurator"][setting.Name];
-
-                    if (setting.PropertyType == typeof(bool))
-                    {
-                        var value = bool.Parse(settingString);
-                        setting.SetValue(this, value);
-                    }
-                    else
-                    {
-                        setting.SetValue(this, settingString);
-                    }
-                }
-            }
-        }
-
-        public string GameConfigsDir { get; private set; } = Configurator.Model.Pcsx2InisDir;
+        public string Pcsx2BuildTitle { get; private set; } = "PCSX2 1.5.0";
+        public string GameConfigsDir { get; private set; } = "%PCSX2_INIS_DIR%";
         public bool CopyLogSettings { get; private set; } = true;
         public bool CopyFolderSettings { get; private set; } = false;
         public bool CopyFileSettings { get; private set; } = true;
