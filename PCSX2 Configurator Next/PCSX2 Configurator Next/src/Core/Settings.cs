@@ -104,7 +104,7 @@ namespace PCSX2_Configurator_Next.Core
     public class SettingsModel
     {
         public string Pcsx2BuildTitle { get; private set; } = "PCSX2 1.5.0";
-        public string GameConfigsDir { get; private set; } = "%PCSX2_INIS_DIR%";
+        public string GameConfigsDir { get; private set; } = "inis";
         public bool CopyLogSettings { get; private set; } = true;
         public bool CopyFolderSettings { get; private set; } = false;
         public bool CopyFileSettings { get; private set; } = true;

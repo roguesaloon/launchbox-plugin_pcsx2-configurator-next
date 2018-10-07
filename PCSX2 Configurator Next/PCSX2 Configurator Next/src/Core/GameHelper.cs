@@ -14,10 +14,14 @@ namespace PCSX2_Configurator_Next.Core
             return safeTitle;
         }
 
-        public static string GetGameConfigDir(IGame game)
+        public static string GetGameConfigDir(IGame game, bool relativeToPcsx2 = false)
         {
+            var gameConfigsDir = !relativeToPcsx2
+                ? Utils.Pcsx2RelativePathToAbsolute(Settings.Model.GameConfigsDir)
+                : Settings.Model.GameConfigsDir;
+
             var gameConfigDirName = !IsGameUsingRocketLauncher(game) ? GetSafeGameTitle(game) : Path.GetFileNameWithoutExtension(game.ApplicationPath);
-            var gameConfigDir = $"{Settings.Model.GameConfigsDir}\\{gameConfigDirName}";
+            var gameConfigDir = $"{gameConfigsDir}\\{gameConfigDirName}";
             return gameConfigDir;
         }
 

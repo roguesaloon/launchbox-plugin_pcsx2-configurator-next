@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +17,6 @@ namespace PCSX2_Configurator_Next.Core
         {
             Settings.Initialize();
             Model = new ConfiguratorModel(Settings.Model.Pcsx2BuildTitle);
-            Settings.ReplaceValues(new KeyValuePair<string, string>("%PCSX2_INIS_DIR%", Model.Pcsx2InisDir));
         }
 
         public static void CreateConfig(IGame game)
@@ -94,7 +92,7 @@ namespace PCSX2_Configurator_Next.Core
         {
             var pcsx2AppPath = Model.Pcsx2RelativeAppPath;
             var pcsx2CommandLine = Model.Pcsx2CommandLine;
-            var gameConfigDir = GameHelper.GetGameConfigDir(game);
+            var gameConfigDir = GameHelper.GetGameConfigDir(game, relativeToPcsx2: true);
 
             var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
 
@@ -115,7 +113,7 @@ namespace PCSX2_Configurator_Next.Core
                     var rocketLauncherPcsx2ConfigPath = $"{rocketLauncherDir}\\Modules\\PCSX2\\PCSX2.ini";
                     var rocketLauncherPcsx2Config = File.Exists(rocketLauncherPcsx2ConfigPath) ? iniParser.ReadFile(rocketLauncherPcsx2ConfigPath) : new IniData();
 
-                    rocketLauncherPcsx2Config["Settings"]["cfgpath"] = Settings.Model.GameConfigsDir;
+                    rocketLauncherPcsx2Config["Settings"]["cfgpath"] = Utils.Pcsx2RelativePathToAbsolute(Settings.Model.GameConfigsDir);
 
                     iniParser.WriteFile(rocketLauncherPcsx2ConfigPath, rocketLauncherPcsx2Config, Encoding.UTF8);
                 });
