@@ -107,7 +107,7 @@ namespace PCSX2_Configurator_Next.Core
                 Task.Run(() =>
                 {
                     var rocketLauncherPath = PluginHelper.DataManager.GetEmulatorById(game.EmulatorId).ApplicationPath;
-                    var rocketLauncherDir = Utils.LaunchBoxRelativePathToAbsolute(rocketLauncherPath);
+                    var rocketLauncherDir = Path.GetDirectoryName(Utils.LaunchBoxRelativePathToAbsolute(rocketLauncherPath));
 
                     var iniParser = new FileIniDataParser();
                     var rocketLauncherPcsx2ConfigPath = $"{rocketLauncherDir}\\Modules\\PCSX2\\PCSX2.ini";
