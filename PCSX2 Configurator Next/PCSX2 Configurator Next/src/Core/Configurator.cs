@@ -120,7 +120,7 @@ namespace PCSX2_Configurator_Next.Core
                         ? iniParser.ReadFile(rocketLauncherPcsx2ConfigPath)
                         : new IniData();
 
-                    rocketLauncherPcsx2Config["Settings"]["cfgpath"] = Utils.Pcsx2RelativePathToAbsolute(Settings.Model.GameConfigsDir);
+                    rocketLauncherPcsx2Config["Settings"]["cfgpath"] = Settings.Model.GameConfigsDir;
 
                     iniParser.WriteFile(rocketLauncherPcsx2ConfigPath, rocketLauncherPcsx2Config, Encoding.UTF8);
                 });
