@@ -57,6 +57,8 @@ namespace PCSX2_Configurator_Next.Plugins
             };
             configWindow.Owner.IsEnabled = false;
             configWindow.Show();
+
+            Console.WriteLine("PCSX2 Configurator: Config Window Opened");
         }
 
         public void OnSelected(IGame[] selectedGames)

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,8 @@ namespace PCSX2_Configurator_Next.Core
             CopyOtherSettings(gameConfigDir);
 
             SetGameConfigParams(game);
+
+            Console.WriteLine("PCSX2 Configurator: Create Config");
         }
 
         [SuppressMessage("ReSharper", "InvertIf")]
@@ -43,15 +46,18 @@ namespace PCSX2_Configurator_Next.Core
                 {
                     var remoteConfigDir = $"{Model.RemoteConfigsDir}\\{remoteConfigPath}";
                     ApplyRemoteConfig(game, remoteConfigDir);
+                    Console.WriteLine("PCSX2 Configurator: Download Config");
                     return true;
                 }
             }
 
+            Console.WriteLine("PCSX2 Configurator: Download Config Fail");
             return false;
         }
 
         public static bool CheckForConfigUpdates(string remoteConfigPath)
         {
+            Console.WriteLine("PCSX2 Configurator: Check Config Update");
             var remoteConfigDir = $"{Model.RemoteConfigsDir}\\{remoteConfigPath}";
             return Utils.SvnDirNeedsUpdate(remoteConfigDir);
         }
@@ -64,6 +70,8 @@ namespace PCSX2_Configurator_Next.Core
             {
                 ApplyRemoteConfig(game, remoteConfigDir);
             }
+
+            Console.WriteLine("PCSX2 Configurator: Update Config");
         }
 
         public static void RemoveConfig(IGame game)
@@ -71,6 +79,8 @@ namespace PCSX2_Configurator_Next.Core
             var gameConfigDir = GameHelper.GetGameConfigDir(game);
             Utils.SystemRemoveDir(gameConfigDir);
             ClearGameConfigParams(game);
+
+            Console.WriteLine("PCSX2 Configurator: Remove Config");
         }
 
         public static void ApplyGameConfigParams(IGame game)
@@ -86,6 +96,8 @@ namespace PCSX2_Configurator_Next.Core
             {
                 ClearGameConfigParams(game);
             }
+
+            Console.WriteLine("PCSX2 Configurator: Apply Game Params");
         }
 
         private static void SetGameConfigParams(IGame game)

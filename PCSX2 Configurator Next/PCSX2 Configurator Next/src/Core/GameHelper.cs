@@ -30,9 +30,9 @@ namespace PCSX2_Configurator_Next.Core
         public static string GetRemoteConfigPath(IGame game)
         {
             var remotePath = Configurator.Model.RemoteConfigsUrl;
-            bool WithGameId(string str) => str.Contains($"id#{game.LaunchBoxDbId}");
+            bool withGameId(string str) => str.Contains($"id#{game.LaunchBoxDbId}");
 
-            var selectedGamePath = Utils.SvnFindPathInRemote(remotePath, WithGameId);
+            var selectedGamePath = Utils.SvnFindPathInRemote(remotePath, withGameId);
             return selectedGamePath;
         }
 

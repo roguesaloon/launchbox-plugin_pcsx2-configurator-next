@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -107,6 +108,8 @@ namespace PCSX2_Configurator_Next.Ui
 
         private void CreateConfigBtn_Click(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PCSX2 Configurator: Create Config Click");
+
             var createConfig = true;
             if (GameHelper.IsGameConfigured(_selectedGame))
             {
@@ -126,6 +129,8 @@ namespace PCSX2_Configurator_Next.Ui
 
         private void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PCSX2 Configurator: Update Config Click");
+
             if (!GameHelper.IsGameUsingRemoteConfig(_selectedGame))
             {
                 Mouse.OverrideCursor = Cursors.Wait;
@@ -149,6 +154,8 @@ namespace PCSX2_Configurator_Next.Ui
 
         private void RemoveConfigBtn_Click(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PCSX2 Configurator: Remove Config Click");
+
             var removeConfig = true;
             var msgResult = MessageDialog.Show(this, MessageDialog.Type.ConfigRemoveConfirm);
 
@@ -166,6 +173,8 @@ namespace PCSX2_Configurator_Next.Ui
 
         private void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PCSX2 Configurator: Configure with PCSX2 Click");
+
             _selectedGame.Configure();
             Close();
         }

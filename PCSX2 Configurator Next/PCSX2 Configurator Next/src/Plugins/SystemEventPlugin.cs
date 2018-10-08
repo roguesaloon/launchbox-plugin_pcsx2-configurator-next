@@ -37,6 +37,8 @@ namespace PCSX2_Configurator_Next.Plugins
 #endif
             Configurator.Initialize();
             DownloadSvn();
+
+            Console.WriteLine("PCSX2 Configurator: Initialized");
         }
 
         private static void OnSelectionChanged()
