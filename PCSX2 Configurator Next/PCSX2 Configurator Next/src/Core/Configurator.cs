@@ -98,7 +98,7 @@ namespace PCSX2_Configurator_Next.Core
 
             if (!GameHelper.IsGameUsingRocketLauncher(game))
             {
-                game.CommandLine = string.IsNullOrEmpty(game.CommandLine)
+                game.CommandLine = !game.CommandLine.Contains(configCommandLine)
                     ? $"{pcsx2CommandLine} {configCommandLine}"
                     : game.CommandLine;
             }
@@ -111,7 +111,9 @@ namespace PCSX2_Configurator_Next.Core
 
                     var iniParser = new FileIniDataParser();
                     var rocketLauncherPcsx2ConfigPath = $"{rocketLauncherDir}\\Modules\\PCSX2\\PCSX2.ini";
-                    var rocketLauncherPcsx2Config = File.Exists(rocketLauncherPcsx2ConfigPath) ? iniParser.ReadFile(rocketLauncherPcsx2ConfigPath) : new IniData();
+                    var rocketLauncherPcsx2Config = File.Exists(rocketLauncherPcsx2ConfigPath)
+                        ? iniParser.ReadFile(rocketLauncherPcsx2ConfigPath)
+                        : new IniData();
 
                     rocketLauncherPcsx2Config["Settings"]["cfgpath"] = Utils.Pcsx2RelativePathToAbsolute(Settings.Model.GameConfigsDir);
 

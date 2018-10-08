@@ -20,7 +20,9 @@ namespace PCSX2_Configurator_Next.Core
                 ? Utils.Pcsx2RelativePathToAbsolute(Settings.Model.GameConfigsDir)
                 : Settings.Model.GameConfigsDir;
 
-            var gameConfigDirName = !IsGameUsingRocketLauncher(game) ? GetSafeGameTitle(game) : Path.GetFileNameWithoutExtension(game.ApplicationPath);
+            var gameConfigDirName = !IsGameUsingRocketLauncher(game)
+                ? GetSafeGameTitle(game)
+                : Path.GetFileNameWithoutExtension(game.ApplicationPath);
             var gameConfigDir = $"{gameConfigsDir}\\{gameConfigDirName}";
             return gameConfigDir;
         }
