@@ -64,5 +64,20 @@ namespace PCSX2_Configurator_Next.Core
             var ret = Regex.IsMatch(emulator.Title, "rocket.*launcher", RegexOptions.IgnoreCase);
             return ret;
         }
+
+        public static string GetCustomCliParams(IGame game)
+        {
+            var gameConfigDir = GetGameConfigDir(game);
+            var customCliParamsPath = $"{gameConfigDir}\\cli.txt";
+
+            if (!File.Exists(customCliParamsPath)) return string.Empty;
+
+            var customCliParams = File.ReadAllText(customCliParamsPath);
+            customCliParams = customCliParams.Replace(",", "");
+            customCliParams = customCliParams.Replace("\r\n", "\n");
+            customCliParams = customCliParams.Replace("\n", " ");
+
+            return customCliParams;
+        }
     }
 }

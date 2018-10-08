@@ -95,12 +95,17 @@ namespace PCSX2_Configurator_Next.Core
             var gameConfigDir = GameHelper.GetGameConfigDir(game, relativeToPcsx2: true);
 
             var configCommandLine = $"--cfgpath \"{gameConfigDir}\"";
+            var customCliParams = GameHelper.GetCustomCliParams(game);
 
             if (!GameHelper.IsGameUsingRocketLauncher(game))
             {
-                game.CommandLine = !game.CommandLine.Contains(configCommandLine)
-                    ? $"{pcsx2CommandLine} {configCommandLine}"
-                    : game.CommandLine;
+                var commandLineFull = $"{pcsx2CommandLine} {customCliParams} {configCommandLine}";
+                commandLineFull = commandLineFull.Replace("  ", " ");
+
+                game.CommandLine =
+                    !game.CommandLine.Contains(configCommandLine) || !game.CommandLine.Contains(customCliParams)
+                        ? commandLineFull
+                        : game.CommandLine;
             }
             else
             {
