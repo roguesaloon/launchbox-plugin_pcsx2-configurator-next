@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using IniParser.Model;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
@@ -88,6 +89,30 @@ namespace PCSX2_Configurator_Next.Core
             emulators = emulators.Where(_ => _.Title.ToLower().Contains(title.ToLower())).ToArray();
 
             return emulators;
+        }
+
+        public static KeyDataCollection RocketLauncherCliToIni(string cliParams)
+        {
+            var cliParamsArr = cliParams.Replace("--", "-").Split('-').Select(_ => _.Trim()).Where(_ => !string.IsNullOrWhiteSpace(_));
+
+            var gameCliIni = new KeyDataCollection();
+            foreach (var param in cliParamsArr)
+            {
+                if (!param.Contains(" "))
+                {
+                    gameCliIni.AddKey(param, "true");
+                }
+                else
+                {
+                    var keyData = param.Split(' ');
+                    var key = keyData[0];
+                    var data = keyData[1];
+
+                    gameCliIni.AddKey(key, data);
+                }
+            }
+
+            return gameCliIni;
         }
 
         private static string SvnOutputLine(string svnOutput, Func<string, bool> withCondition)

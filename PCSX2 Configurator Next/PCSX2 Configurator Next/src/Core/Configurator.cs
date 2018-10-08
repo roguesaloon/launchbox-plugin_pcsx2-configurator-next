@@ -120,7 +120,15 @@ namespace PCSX2_Configurator_Next.Core
                         ? iniParser.ReadFile(rocketLauncherPcsx2ConfigPath)
                         : new IniData();
 
+                    var romName = Path.GetFileNameWithoutExtension(game.ApplicationPath);
+
                     rocketLauncherPcsx2Config["Settings"]["cfgpath"] = Utils.Pcsx2RelativePathToAbsolute(Settings.Model.GameConfigsDir);
+                    rocketLauncherPcsx2Config.Sections.RemoveSection(romName);
+
+                    foreach (var param in Utils.RocketLauncherCliToIni(customCliParams))
+                    {
+                        rocketLauncherPcsx2Config[romName][param.KeyName] = param.Value;
+                    }
 
                     iniParser.WriteFile(rocketLauncherPcsx2ConfigPath, rocketLauncherPcsx2Config, Encoding.UTF8);
                 });
