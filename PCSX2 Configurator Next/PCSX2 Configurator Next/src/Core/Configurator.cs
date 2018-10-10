@@ -14,6 +14,8 @@ namespace PCSX2_Configurator_Next.Core
     {
         public static ConfiguratorModel Model { get; private set; }
 
+        private static readonly FileIniDataParser IniParser = new FileIniDataParser();
+
         public static void Initialize()
         {
             Settings.Initialize();
@@ -126,10 +128,9 @@ namespace PCSX2_Configurator_Next.Core
                     var rocketLauncherPath = PluginHelper.DataManager.GetEmulatorById(game.EmulatorId).ApplicationPath;
                     var rocketLauncherDir = Path.GetDirectoryName(Utils.LaunchBoxRelativePathToAbsolute(rocketLauncherPath));
 
-                    var iniParser = new FileIniDataParser();
                     var rocketLauncherPcsx2ConfigPath = $"{rocketLauncherDir}\\Modules\\PCSX2\\PCSX2.ini";
                     var rocketLauncherPcsx2Config = File.Exists(rocketLauncherPcsx2ConfigPath)
-                        ? iniParser.ReadFile(rocketLauncherPcsx2ConfigPath)
+                        ? IniParser.ReadFile(rocketLauncherPcsx2ConfigPath)
                         : new IniData();
 
                     var romName = Path.GetFileNameWithoutExtension(game.ApplicationPath);
@@ -142,7 +143,7 @@ namespace PCSX2_Configurator_Next.Core
                         rocketLauncherPcsx2Config[romName][param.KeyName] = param.Value;
                     }
 
-                    iniParser.WriteFile(rocketLauncherPcsx2ConfigPath, rocketLauncherPcsx2Config, Encoding.UTF8);
+                    IniParser.WriteFile(rocketLauncherPcsx2ConfigPath, rocketLauncherPcsx2Config, Encoding.UTF8);
                 });
 
             }
@@ -160,8 +161,7 @@ namespace PCSX2_Configurator_Next.Core
 
         private static void CreateUiConfigFile(string targetConfigDir, IGame game)
         {
-            var iniParser = new FileIniDataParser();
-            var baseUiConfig = iniParser.ReadFile($"{Model.Pcsx2InisDir}\\{Model.Pcsx2UiFileName}");
+            var baseUiConfig = IniParser.ReadFile($"{Model.Pcsx2InisDir}\\{Model.Pcsx2UiFileName}");
             var targetUiConfig = new IniData();
 
             if (Settings.Model.CopyLogSettings) targetUiConfig["ProgramLog"].Merge(baseUiConfig["ProgramLog"]);
@@ -192,7 +192,7 @@ namespace PCSX2_Configurator_Next.Core
             targetUiConfig.Global["CurrentIso"] = isoPath.Replace("\\", "\\\\");
             targetUiConfig.Global["AskOnBoot"] = "disabled";
 
-            iniParser.WriteFile($"{targetConfigDir}\\{Model.Pcsx2UiFileName}", targetUiConfig, Encoding.UTF8);
+            IniParser.WriteFile($"{targetConfigDir}\\{Model.Pcsx2UiFileName}", targetUiConfig, Encoding.UTF8);
         }
 
         private static void ExtractFormattedMemoryCard(IniData baseUiConfig, string memCardFileName)
@@ -276,11 +276,10 @@ namespace PCSX2_Configurator_Next.Core
                 File.Create($"{targetGameConfigDir}\\{Model.RemoteConfigDummyFileName}").Dispose();
             }
 
-            var iniParser = new FileIniDataParser();
             var targetUiConfigFilePath = $"{targetGameConfigDir}\\{Model.Pcsx2UiFileName}";
             var uiTweaksFilePath = $"{targetGameConfigDir}\\PCSX2_ui-tweak.ini";
 
-            var targetUiConfig = iniParser.ReadFile(targetUiConfigFilePath);
+            var targetUiConfig = IniParser.ReadFile(targetUiConfigFilePath);
 
             targetUiConfig.Global["EnablePresets"] = "disabled";
             targetUiConfig.Global["EnableGameFixes"] = "enabled";
@@ -289,11 +288,11 @@ namespace PCSX2_Configurator_Next.Core
 
             if (File.Exists(uiTweaksFilePath))
             {
-                var uiTweakConfig = iniParser.ReadFile(uiTweaksFilePath);
+                var uiTweakConfig = IniParser.ReadFile(uiTweaksFilePath);
                 targetUiConfig.Merge(uiTweakConfig);
             }
 
-            var baseUiConfig = iniParser.ReadFile($"{Model.Pcsx2InisDir}\\{Model.Pcsx2UiFileName}");
+            var baseUiConfig = IniParser.ReadFile($"{Model.Pcsx2InisDir}\\{Model.Pcsx2UiFileName}");
             var cheatsDir = baseUiConfig["Folders"]["Cheats"];
             cheatsDir = Utils.Pcsx2RelativePathToAbsolute(cheatsDir);
 
@@ -302,7 +301,7 @@ namespace PCSX2_Configurator_Next.Core
                 File.Move(file, $"{cheatsDir}\\{Path.GetFileName(file)}");
             }
 
-            iniParser.WriteFile(targetUiConfigFilePath, targetUiConfig, Encoding.UTF8);
+            IniParser.WriteFile(targetUiConfigFilePath, targetUiConfig, Encoding.UTF8);
         }
     }
 }

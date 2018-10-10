@@ -4,7 +4,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+#if DEBUG
 using System.Threading;
+#endif
 using PCSX2_Configurator_Next.Core;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
