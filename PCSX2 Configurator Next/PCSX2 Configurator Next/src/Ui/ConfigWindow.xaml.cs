@@ -1,14 +1,16 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using PCSX2_Configurator_Next.WpfExtensions;
+using PCSX2_Configurator_Next.Core;
+using PCSX2_Configurator_Next.Ui.WpfExtensions;
 using Unbroken.LaunchBox.Plugins.Data;
 
-namespace PCSX2_Configurator_Next
+namespace PCSX2_Configurator_Next.Ui
 {
     /// <inheritdoc cref="Window" />
     /// <summary>
@@ -106,6 +108,8 @@ namespace PCSX2_Configurator_Next
 
         private void CreateConfigBtn_Click(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PCSX2 Configurator: Create Config Click");
+
             var createConfig = true;
             if (GameHelper.IsGameConfigured(_selectedGame))
             {
@@ -125,6 +129,8 @@ namespace PCSX2_Configurator_Next
 
         private void DownloadConfigBtn_Click(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PCSX2 Configurator: Update Config Click");
+
             if (!GameHelper.IsGameUsingRemoteConfig(_selectedGame))
             {
                 Mouse.OverrideCursor = Cursors.Wait;
@@ -148,6 +154,8 @@ namespace PCSX2_Configurator_Next
 
         private void RemoveConfigBtn_Click(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PCSX2 Configurator: Remove Config Click");
+
             var removeConfig = true;
             var msgResult = MessageDialog.Show(this, MessageDialog.Type.ConfigRemoveConfirm);
 
@@ -165,6 +173,8 @@ namespace PCSX2_Configurator_Next
 
         private void Pcsx2Btn_Click(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine("PCSX2 Configurator: Configure with PCSX2 Click");
+
             _selectedGame.Configure();
             Close();
         }

@@ -1,9 +1,14 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
+using PCSX2_Configurator_Next.Core;
+using PCSX2_Configurator_Next.Ui;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
-namespace PCSX2_Configurator_Next
+namespace PCSX2_Configurator_Next.Plugins
 {
     internal class GameMenuItemPlugin : IGameMenuItemPlugin
     {
@@ -11,7 +16,14 @@ namespace PCSX2_Configurator_Next
 
         public string Caption => "PCSX2 Configurator";
 
-        public Image IconImage => null;
+        public Image IconImage
+        {
+            get
+            {
+                var icon = Icon.ExtractAssociatedIcon(Configurator.Model.Pcsx2AbsoluteAppPath);
+                return icon?.ToBitmap();
+            }
+        }
 
         public bool ShowInLaunchBox => true;
 
@@ -33,7 +45,10 @@ namespace PCSX2_Configurator_Next
             var configWindow = new ConfigWindow(selectedGame)
             {
                 Owner = Application.Current.MainWindow,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Icon = IconImage != null ? 
+                    Imaging.CreateBitmapSourceFromHBitmap(((Bitmap) IconImage).GetHbitmap(), IntPtr.Zero,
+                    Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(IconImage.Width, IconImage.Height)) : null
             };
             configWindow.Closing += (sender, args) =>
             {
@@ -42,6 +57,8 @@ namespace PCSX2_Configurator_Next
             };
             configWindow.Owner.IsEnabled = false;
             configWindow.Show();
+
+            Console.WriteLine("PCSX2 Configurator: Config Window Opened");
         }
 
         public void OnSelected(IGame[] selectedGames)

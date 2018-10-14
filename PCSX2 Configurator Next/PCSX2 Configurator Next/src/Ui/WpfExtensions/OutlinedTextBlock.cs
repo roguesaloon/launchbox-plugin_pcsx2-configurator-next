@@ -6,7 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
 
-namespace PCSX2_Configurator_Next.WpfExtensions
+namespace PCSX2_Configurator_Next.Ui.WpfExtensions
 {
     public enum StrokePosition
     {

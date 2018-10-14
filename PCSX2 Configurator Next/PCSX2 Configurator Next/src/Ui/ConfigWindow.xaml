@@ -1,9 +1,9 @@
-﻿<Window x:Class="PCSX2_Configurator_Next.ConfigWindow"
+﻿<Window x:Class="PCSX2_Configurator_Next.Ui.ConfigWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:wpfExtensions="clr-namespace:PCSX2_Configurator_Next.WpfExtensions"
+        xmlns:wpfExtensions="clr-namespace:PCSX2_Configurator_Next.Ui.WpfExtensions"
         mc:Ignorable="d" 
         MinWidth="550" MinHeight="360" Width="550" Height="360" MaxWidth="550" MaxHeight="360"
         Title="PCSX2 Configurator" WindowStyle="None" AllowsTransparency="true">
@@ -12,25 +12,23 @@
     </Window.Background>
     <Grid>
 
-        <StackPanel>
-            <Label x:Name="ConfiguredLbl" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,25,10,0" FontSize="22" FontFamily="./fonts/#pixelFJ8pt1" Width="530" Height="56" HorizontalContentAlignment="Center">
-                <Label.Effect>
-                    <DropShadowEffect ShadowDepth="3" BlurRadius="1" Color="#FF1B39AE"/>
-                </Label.Effect>
-                <wpfExtensions:OutlinedTextBlock Stroke="#19a6ff"
+        <Label x:Name="ConfiguredLbl" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,17,10,0" FontSize="22" FontFamily="../../fonts/#pixelFJ8pt1" Width="530" Height="85" HorizontalContentAlignment="Center">
+            <Label.Effect>
+                <DropShadowEffect ShadowDepth="5" Color="#FF8DC7E0" Opacity="0.75" BlurRadius="10" Direction="0"/>
+            </Label.Effect>
+            <wpfExtensions:OutlinedTextBlock Stroke="#19a6ff"
                                                  Fill="White"
                                                  ClipToBounds="True"
                                                  StrokePosition="Outside"
-                                                 StrokeThickness="2" Text="[Game Name]: [Configured]" TextAlignment="Center" Height="46" Width="520">
-                </wpfExtensions:OutlinedTextBlock>
-            </Label>
-            <StackPanel.Effect>
-                <DropShadowEffect ShadowDepth="5" Color="#FFBBDCEA" Opacity="0.75" BlurRadius="10" Direction="0"/>
-            </StackPanel.Effect>
-        </StackPanel>
+                                                 StrokeThickness="2" Text="[Game Name]: [Configured]" TextAlignment="Center" Height="75" Width="520" TextWrapping="Wrap">
+                <wpfExtensions:OutlinedTextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="3" BlurRadius="1" Color="#FF1B39AE"/>
+                </wpfExtensions:OutlinedTextBlock.Effect>
+            </wpfExtensions:OutlinedTextBlock>
+        </Label>
 
         <Grid x:Name="CreateConfigBtnGrd" Margin="185,95,181,220">
-            <Label x:Name="CreateConfigBtnLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
+            <Label x:Name="CreateConfigBtnLbl" FontFamily="../../fonts/#pixelFJ8pt1" FontSize="20">
                 <Label.Effect>
                     <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
                 </Label.Effect>
@@ -45,7 +43,7 @@
         </Grid>
 
         <Grid x:Name="DownloadConfigBtnGrd" Margin="158,140,158,175">
-            <Label x:Name="DownloadConfigBtnLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
+            <Label x:Name="DownloadConfigBtnLbl" FontFamily="../../fonts/#pixelFJ8pt1" FontSize="20">
                 <Label.Effect>
                     <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
                 </Label.Effect>
@@ -60,7 +58,7 @@
         </Grid>
 
         <Grid x:Name="RemoveConfigBtnGrd" Margin="170,185,174,130">
-            <Label x:Name="RemoveConfigBtnLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
+            <Label x:Name="RemoveConfigBtnLbl" FontFamily="../../fonts/#pixelFJ8pt1" FontSize="20">
                 <Label.Effect>
                     <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
                 </Label.Effect>
@@ -75,7 +73,7 @@
         </Grid>
 
         <Grid x:Name="ConfigureWithPcsx2BtnGrd" Margin="118,230,134,85">
-            <Label x:Name="ConfigureWithPcsx2BtnLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="20">
+            <Label x:Name="ConfigureWithPcsx2BtnLbl" FontFamily="../../fonts/#pixelFJ8pt1" FontSize="20">
                 <Label.Effect>
                     <DropShadowEffect Direction="220" ShadowDepth="3" Color="#FF1B27DC"/>
                 </Label.Effect>
@@ -91,8 +89,8 @@
 
         <Button x:Name="CloseBtn" Cursor="Hand" Margin="535,7,5,343" Opacity="0" />
 
-        <Label x:Name="VersionLbl" FontFamily="./fonts/#pixelFJ8pt1" FontSize="8" HorizontalContentAlignment="Center" Margin="420,330,40,0" Height="20" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.667,0.967">
-            Beta 1 Hotfix 2
+        <Label x:Name="VersionLbl" FontFamily="../../fonts/#pixelFJ8pt1" FontSize="8" HorizontalContentAlignment="Center" Margin="420,330,40,0" Height="20" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.667,0.967">
+            Beta 2
         </Label>
 
     </Grid>

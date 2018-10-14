@@ -4,19 +4,21 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+#if DEBUG
+using System.Threading;
+#endif
+using PCSX2_Configurator_Next.Core;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 
 
-namespace PCSX2_Configurator_Next
+namespace PCSX2_Configurator_Next.Plugins
 {
     internal class SystemEventsPlugin : ISystemEventsPlugin
     {
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         public void OnEventRaised(string eventType)
         {
-            //Task.Run(() => MessageBox.Show(new Form { TopMost = true }, eventType));
-
             switch (eventType)
             {
                 case SystemEventTypes.PluginInitialized:
@@ -32,8 +34,13 @@ namespace PCSX2_Configurator_Next
 
         private static void OnPluginInitialized()
         {
+#if DEBUG
+            Thread.Sleep(3000);
+#endif
+            Configurator.Initialize();
             DownloadSvn();
-            SettingsModel.Init();
+
+            Console.WriteLine("PCSX2 Configurator: Initialized");
         }
 
         private static void OnSelectionChanged()
@@ -44,8 +51,8 @@ namespace PCSX2_Configurator_Next
 
         private static void DownloadSvn()
         {
-            var svnDir = $"{ConfiguratorModel.LaunchBoxDir}\\SVN";
-            var svnZip = $"{ConfiguratorModel.LaunchBoxDir}\\SVN.zip";
+            var svnDir = Configurator.Model.SvnDir;
+            var svnZip = $"{Configurator.Model.LaunchBoxDir}\\SVN.zip";
 
             if (Directory.Exists(svnDir)) return;
             try
