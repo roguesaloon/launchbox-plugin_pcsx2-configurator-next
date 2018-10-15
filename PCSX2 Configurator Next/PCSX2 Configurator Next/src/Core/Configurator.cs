@@ -302,6 +302,8 @@ namespace PCSX2_Configurator_Next.Core
             }
 
             IniParser.WriteFile(targetUiConfigFilePath, targetUiConfig, Encoding.UTF8);
+
+            ApplyGameConfigParams(game);
         }
     }
 }
