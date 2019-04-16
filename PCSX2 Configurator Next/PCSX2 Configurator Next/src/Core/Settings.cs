@@ -114,6 +114,7 @@ namespace PCSX2_Configurator_Next.Core
         public bool CopyVmSettingsFile { get; private set; } = true;
         public bool CopyGsdxSettingsFile { get; private set; } = true;
         public bool CopySpu2XSettingsFile { get; private set; } = false;
+        public bool CopyLilyPadSettingsFile { get; private set; } = false;
         public bool Copynuvee_ps2_usb_main { get; private set; } = false;
         public bool Copynuvee_ps2_usb_guncon1 { get; private set; } = false;
         public bool Copynuvee_ps2_usb_guncon2 { get; private set; } = false;
