@@ -240,6 +240,34 @@ namespace PCSX2_Configurator_Next.Core
                 try { File.Copy($"{baseConfigDir}\\{lilyPadSettingsFileName}", $"{targetConfigDir}\\{lilyPadSettingsFileName}", true); }
                 catch { /*ignored*/ }
             }
+
+            if (Settings.Model.Copynuvee_ps2_usb_mainFile)
+            {
+                var nuvee_ps2_usb_mainFileName = "nuvee_ps2_usb_main.ini";
+                try { File.Copy($"{baseConfigDir}\\{nuvee_ps2_usb_mainFileName}", $"{targetConfigDir}\\{nuvee_ps2_usb_mainFileName}", true); }
+                catch { /*ignored*/ }
+            }
+            
+            if (Settings.Model.Copynuvee_ps2_usb_guncon1File)
+            {
+                var nuvee_ps2_usb_guncon1FileName = "nuvee_ps2_usb_guncon1.ini";
+                try { File.Copy($"{baseConfigDir}\\{nuvee_ps2_usb_guncon1FileName}", $"{targetConfigDir}\\{nuvee_ps2_usb_guncon1FileName}", true); }
+                catch { /*ignored*/ }
+            }
+            
+            if (Settings.Model.Copynuvee_ps2_usb_guncon2File)
+            {
+                var nuvee_ps2_usb_guncon2Name = "nuvee_ps2_usb_guncon2.ini";
+                try { File.Copy($"{baseConfigDir}\\{nuvee_ps2_usb_guncon2FileName}", $"{targetConfigDir}\\{nuvee_ps2_usb_guncon2FileName}", true); }
+                catch { /*ignored*/ }
+            }
+            
+            if (Settings.Model.Copynuvee_ps2_usb_mainFile)
+            {
+                var lilyPadSettingsFileName = "nuvee_ps2_usb_guncon_profiles.ini";
+                try { File.Copy($"{baseConfigDir}\\{nuvee_ps2_usb_guncon_profilesFileName}", $"{targetConfigDir}\\{nuvee_ps2_usb_guncon_profilesFileName}", true); }
+                catch { /*ignored*/ }
+            }
         }
 
         private static string DownloadConfigFromRemote(string remoteConfigPath)
