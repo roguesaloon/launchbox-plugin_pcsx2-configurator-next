@@ -37,7 +37,7 @@ namespace PCSX2_Configurator_Next.Core
                 {
                     CreateNoWindow = true,
                     UseShellExecute = false,
-                    FileName = $"{Configurator.Model.LaunchBoxDir}\\7-Zip\\7z.exe",
+                    FileName = $"{Configurator.Model.LaunchBoxDir}\\ThirdParty\\7-Zip\\7z.exe",
                     Arguments = $"x \"{archive}\" -o\"{outputDir}\""
                 }
             };
