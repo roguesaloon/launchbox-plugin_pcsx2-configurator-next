@@ -285,6 +285,7 @@ namespace PCSX2_Configurator_Next.Core
             targetUiConfig.Global["EnableGameFixes"] = "enabled";
             targetUiConfig.Global["EnableSpeedHacks"] = "enabled";
             targetUiConfig["GSWindow"]["Zoom"] = "101.00";
+            targetUiConfig["GSWindow"]["AspectRatio"] = "16:9";
 
             if (File.Exists(uiTweaksFilePath))
             {
@@ -298,6 +299,7 @@ namespace PCSX2_Configurator_Next.Core
 
             foreach (var file in Directory.GetFiles(targetGameConfigDir, "*.pnach"))
             {
+                File.Delete($"{cheatsDir}\\{Path.GetFileName(file)}");
                 File.Move(file, $"{cheatsDir}\\{Path.GetFileName(file)}");
             }
 
