@@ -10,7 +10,7 @@ namespace PCSX2_Configurator_Next.Core
     public class ConfiguratorModel
     {
         public string PluginDir => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        public string LaunchBoxDir => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+        public string LaunchBoxDir => Directory.GetParent($"{Directory.GetParent(PluginDir)}").ToString();
         public string RemoteConfigsUrl => "https://github.com/Zombeaver/PCSX2-Configs/trunk/Game%20Configs";
         public string RemoteConfigsDir => _remoteConfigsDir ?? (_remoteConfigsDir = GetRemoteConfigsDir());
         public string RemoteConfigDummyFileName => "remote";
